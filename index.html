@@ -72,12 +72,19 @@ button,select,textarea,input{font-family:inherit;color:inherit}
     padding:0 40px;display:flex;gap:32px;
     height:54px;align-items:center;
     background:#fff;
+    flex-wrap:nowrap;          /* 줄바꿈 금지 */
+    overflow-x:auto;            /* 가로 스크롤 */
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;       /* Firefox 스크롤바 숨김 */
 }
+.subnav::-webkit-scrollbar{display:none}  /* WebKit 스크롤바 숨김 */
 .subnav a{
     font-size:13px;color:var(--text-3);
     text-decoration:none;letter-spacing:0.02em;
     position:relative;height:100%;display:flex;align-items:center;
     cursor:pointer;
+    white-space:nowrap;        /* 글자 단위 줄바꿈 금지 ← 핵심 */
+    flex-shrink:0;             /* 좁은 화면에서도 압축 금지 */
 }
 .subnav a.active{color:var(--text);font-weight:500}
 .subnav a[href]{font-size:13px;color:var(--text-3);text-decoration:none;letter-spacing:0.02em;font-weight:400;font-family:inherit}
@@ -1160,7 +1167,15 @@ select.config-select:focus{outline:none;border-color:var(--text)}
     .price-bar{padding:0 20px;height:auto;flex-wrap:wrap;gap:12px;padding:14px 20px}
     .price-actions{width:100%}
     .price-btn{flex:1;padding:14px}
-    .subnav{padding:0 20px;overflow-x:auto}
+    .subnav{padding:0 16px;gap:22px}
+    .subnav a{font-size:12.5px}
+    /* 헤더 로고 — 1100px 이하에서도 한 줄 유지 */
+    .wordmark{
+        font-size:14px;letter-spacing:0.28em;
+        white-space:nowrap;
+        max-width:calc(100vw - 100px);
+        text-align:center;
+    }
 }
 @media(max-width:600px){
     .summary-grid{grid-template-columns:repeat(2,1fr)}
@@ -1168,6 +1183,20 @@ select.config-select:focus{outline:none;border-color:var(--text)}
     .summary-cell:nth-child(2){border-right:0}
     .stage-empty h2{font-size:22px}
     .price-amount{font-size:20px}
+    /* 모바일 (~600px): 탭/로고 더 컴팩트 */
+    .site-header{padding:0 16px;height:60px}
+    .wordmark{
+        font-size:12px;letter-spacing:0.22em;
+        max-width:calc(100vw - 80px);
+    }
+    .subnav{padding:0 14px;gap:18px;height:48px}
+    .subnav a{font-size:12px}
+}
+@media(max-width:380px){
+    /* 아이폰 SE 등 매우 좁은 화면 */
+    .wordmark{font-size:11px;letter-spacing:0.15em}
+    .subnav{gap:14px}
+    .subnav a{font-size:11.5px}
 }
 
 /* ======= Print sheet (screen: hidden) ======= */
@@ -1408,24 +1437,6 @@ select.config-select:focus{outline:none;border-color:var(--text)}
 }
 
 
-
-/* ===== 모바일 반응형 패치 (2026-05) ===== */
-@media (max-width:760px){
-    .site-header{padding:0 14px;height:54px}
-    .wordmark{font-size:11px;letter-spacing:0.18em;white-space:nowrap}
-    .right-meta{font-size:11px;letter-spacing:0.18em;gap:12px}
-    .subnav{padding:0 14px;gap:18px;height:46px}
-    .subnav a,.subnav a[href]{font-size:12px;white-space:nowrap;flex-shrink:0;word-break:keep-all;letter-spacing:0.01em}
-    .vh-title{font-size:24px;line-height:1.25}
-    .vh-eyebrow{font-size:10px;letter-spacing:0.24em}
-    .ap-frame{min-height:480px}
-    .stage{padding:24px 18px}
-}
-@media (max-width:380px){
-    .wordmark{font-size:10px;letter-spacing:0.14em}
-    .subnav a,.subnav a[href]{font-size:11px}
-    .subnav{gap:14px}
-}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
