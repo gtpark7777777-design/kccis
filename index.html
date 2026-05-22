@@ -1392,145 +1392,144 @@ select.config-select:focus{outline:none;border-color:var(--text)}
 .ap-controls{display:none !important}
 
 /* ========================================
-   KCC오토그룹 탭 — 첫 인상 강화용 히어로 + 통계 카드
+   KCC오토그룹 탭 — Land Rover ownership 페이지 스타일 (미니멀·화이트·얇은 라인)
    ======================================== */
 .kcc-hero{
-    margin:24px 0 32px;
-    padding:48px 32px 40px;
-    background:linear-gradient(135deg,#fafaf8 0%,#f0f0ec 100%);
-    border:1px solid var(--line);
+    margin:0 0 56px;
+    padding:80px 32px 64px;
+    background:#fff;
     text-align:center;
     position:relative;
-    overflow:hidden;
-}
-.kcc-hero::before{
-    content:'';
-    position:absolute;top:0;left:0;right:0;height:4px;
-    background:linear-gradient(90deg,var(--green) 0%,#d4af37 50%,var(--green) 100%);
 }
 .kcc-hero-logo{
     display:block;
-    max-width:280px;width:60%;height:auto;
-    margin:0 auto 20px;
+    max-width:240px;width:55%;height:auto;
+    margin:0 auto 40px;
     object-fit:contain;
 }
-/* 로고 파일이 없을 때 자동 표시되는 텍스트 폴백 (JS onerror에서 삽입) */
+/* 로고 파일이 없을 때 자동 표시되는 텍스트 폴백 */
 .kcc-hero-wordmark{
-    font-size:36px;font-weight:800;letter-spacing:-0.02em;
-    color:var(--text);margin-bottom:20px;
+    font-size:30px;font-weight:300;letter-spacing:-0.01em;
+    color:var(--text);margin:0 auto 40px;
     font-family:'Inter','Pretendard',-apple-system,sans-serif;
-}
-.kcc-hero-badge{
-    display:inline-block;
-    padding:8px 22px;
-    background:var(--text);color:#d4af37;
-    font-size:13px;font-weight:700;letter-spacing:0.12em;
-    margin-bottom:18px;border-radius:0;
-    box-shadow:0 4px 12px rgba(0,0,0,0.15);
 }
 .kcc-hero-eyebrow{
-    font-size:11px;letter-spacing:0.32em;
-    color:var(--text-3);font-weight:600;
-    margin-bottom:10px;
+    font-size:11px;letter-spacing:0.36em;
+    color:var(--text-2);font-weight:400;
+    margin-bottom:24px;
+    text-transform:uppercase;
 }
 .kcc-hero-title{
-    font-size:42px;font-weight:800;
-    letter-spacing:-0.025em;color:var(--text);
-    margin-bottom:14px;line-height:1.1;
+    font-size:48px;font-weight:300;
+    letter-spacing:-0.02em;color:var(--text);
+    margin:0 0 28px;line-height:1.15;
     font-family:'Inter','Pretendard',-apple-system,sans-serif;
 }
-.kcc-hero-tagline{
-    font-size:15px;color:var(--text-2);
-    letter-spacing:-0.005em;line-height:1.7;
-    max-width:700px;margin:0 auto;
+.kcc-hero-rule{
+    width:48px;height:1px;background:var(--text);
+    margin:0 auto 28px;border:0;
 }
-.kcc-hero-tagline b{color:var(--text);font-weight:700}
+.kcc-hero-headline{
+    font-size:20px;font-weight:400;
+    letter-spacing:-0.005em;color:var(--text);
+    margin:0 auto 20px;line-height:1.5;
+    max-width:640px;
+}
+.kcc-hero-tagline{
+    font-size:14px;color:var(--text-2);
+    letter-spacing:0.01em;line-height:1.8;
+    max-width:680px;margin:0 auto;
+    font-weight:300;
+}
+.kcc-hero-tagline b{color:var(--text);font-weight:500}
 
 @media(max-width:700px){
-    .kcc-hero{padding:32px 18px 28px;margin:18px 0 24px}
-    .kcc-hero-logo{max-width:220px;width:65%}
-    .kcc-hero-wordmark{font-size:28px}
-    .kcc-hero-badge{font-size:11px;padding:7px 16px;letter-spacing:0.08em}
-    .kcc-hero-title{font-size:30px}
-    .kcc-hero-tagline{font-size:13px}
+    .kcc-hero{padding:48px 20px 40px;margin:0 0 36px}
+    .kcc-hero-logo{max-width:180px;width:60%;margin-bottom:28px}
+    .kcc-hero-wordmark{font-size:24px;margin-bottom:28px}
+    .kcc-hero-eyebrow{font-size:10px;letter-spacing:0.28em;margin-bottom:18px}
+    .kcc-hero-title{font-size:32px;margin-bottom:22px}
+    .kcc-hero-headline{font-size:16px;margin-bottom:16px}
+    .kcc-hero-tagline{font-size:12.5px}
 }
 
-/* ===== 핵심 메시지 카드 ===== */
+/* ===== 핵심 메시지 — 간결한 인용구 스타일 ===== */
 .kcc-highlight-card{
-    margin-top:14px;padding:24px 28px;
-    background:#fff;
-    border:1px solid var(--line);
-    border-left:4px solid var(--green);
-    box-shadow:0 2px 8px rgba(0,0,0,0.04);
+    margin-top:24px;padding:32px 0;
+    background:transparent;
+    border:0;
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
 }
 .kcc-highlight-title{
-    font-size:18px;font-weight:700;color:var(--text);
-    margin-bottom:12px;letter-spacing:-0.015em;
+    font-size:17px;font-weight:500;color:var(--text);
+    margin-bottom:14px;letter-spacing:-0.01em;
 }
 .kcc-highlight-body{
-    font-size:14.5px;color:var(--text-2);line-height:1.85;
-    letter-spacing:-0.005em;
+    font-size:14px;color:var(--text-2);line-height:1.9;
+    letter-spacing:0.005em;font-weight:300;
 }
-.kcc-highlight-body b{color:var(--text);font-weight:600}
+.kcc-highlight-body b{color:var(--text);font-weight:500}
 
-/* ===== 통계 카드 — 큰 숫자로 첫 인상 강화 ===== */
+/* ===== 통계 카드 — 균일한 미니멀 그리드 ===== */
 .kcc-stat-grid{
     display:grid;grid-template-columns:repeat(3,1fr);
-    gap:14px;margin-top:20px;
+    gap:0;margin-top:40px;
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
 }
 .kcc-stat{
-    padding:30px 18px;
-    background:var(--bg-soft-2);
-    border:1px solid var(--line);
-    border-radius:6px;
+    padding:40px 20px;
+    background:transparent;
+    border:0;
+    border-right:1px solid var(--line);
+    border-radius:0;
     text-align:center;
-    transition:transform 0.2s, box-shadow 0.2s;
+    transition:background 0.25s;
 }
+.kcc-stat:last-child{border-right:0}
 .kcc-stat:hover{
-    transform:translateY(-3px);
-    box-shadow:0 8px 22px rgba(0,0,0,0.08);
+    background:var(--bg-soft);
 }
 .kcc-stat-num{
-    font-size:48px;font-weight:800;
-    color:var(--green);line-height:1;
-    letter-spacing:-0.03em;
+    font-size:54px;font-weight:300;
+    color:var(--text);line-height:1;
+    letter-spacing:-0.04em;
     font-variant-numeric:tabular-nums;
     font-family:'Inter','Pretendard',-apple-system,sans-serif;
 }
 .kcc-stat-num span{
-    font-size:20px;font-weight:600;
-    margin-left:3px;letter-spacing:0;
+    font-size:18px;font-weight:400;
+    margin-left:4px;letter-spacing:0;
+    color:var(--text-2);
 }
 .kcc-stat-label{
-    font-size:13.5px;color:var(--text-2);
-    margin-top:10px;font-weight:500;
-    letter-spacing:-0.005em;
+    font-size:12px;color:var(--text-2);
+    margin-top:14px;font-weight:400;
+    letter-spacing:0.16em;text-transform:uppercase;
 }
-/* No.1 카드 강조 — 골드 배경 */
-.kcc-stat.kcc-stat-feature{
-    background:linear-gradient(135deg,#1a1a1a 0%,#2a2a2a 100%);
-    border-color:#d4af37;
-}
-.kcc-stat.kcc-stat-feature .kcc-stat-num{color:#d4af37}
-.kcc-stat.kcc-stat-feature .kcc-stat-label{color:rgba(255,255,255,0.85);font-weight:600}
 
 @media(max-width:700px){
-    .kcc-stat-grid{grid-template-columns:1fr;gap:10px}
-    .kcc-stat{padding:24px 16px}
-    .kcc-stat-num{font-size:40px}
-    .kcc-highlight-card{padding:18px 20px}
-    .kcc-highlight-title{font-size:16px}
-    .kcc-highlight-body{font-size:13.5px}
+    .kcc-stat-grid{grid-template-columns:1fr;margin-top:28px}
+    .kcc-stat{padding:28px 16px;border-right:0;border-bottom:1px solid var(--line)}
+    .kcc-stat:last-child{border-bottom:0}
+    .kcc-stat-num{font-size:42px}
+    .kcc-stat-label{font-size:10.5px;letter-spacing:0.12em}
+    .kcc-highlight-card{padding:24px 0}
+    .kcc-highlight-title{font-size:15px}
+    .kcc-highlight-body{font-size:13px}
 }
 
 .kcc-closing{
-    margin-top:22px;padding:18px 22px;
-    background:var(--bg-soft);
-    border-left:2px solid var(--text-3);
-    font-size:13.5px;color:var(--text-2);line-height:1.85;
-    letter-spacing:-0.005em;
+    margin-top:40px;padding:0;
+    background:transparent;border:0;
+    font-size:14px;color:var(--text-2);line-height:1.9;
+    letter-spacing:0.005em;font-weight:300;
+    text-align:center;
+    max-width:680px;
+    margin-left:auto;margin-right:auto;
 }
-.kcc-closing b{color:var(--text);font-weight:600}
+.kcc-closing b{color:var(--text);font-weight:500}
 
 /* ========================================
    페이지 썸네일 스트립 — 상단 가로 한 줄, 클릭 시 해당 페이지로 이동
@@ -2312,31 +2311,23 @@ body.ap-mobile-fs .ap-fs-close:active{background:rgba(0,0,0,0.85)}
         </div>
 
         <div class="approach-view" id="kccgroupView" style="display:none">
-            <!-- ===== 히어로 영역 — 손님이 처음 보는 화면이므로 시각적 무게감 강화 ===== -->
+            <!-- ===== 히어로 영역 — Land Rover ownership 스타일 (미니멀·화이트·라인 액센트) ===== -->
             <div class="kcc-hero">
                 <img class="kcc-hero-logo" src="assets/kcc_auto_group_logo.png" alt="KCC오토그룹"
                      onerror="this.style.display='none';var w=document.createElement('div');w.className='kcc-hero-wordmark';w.textContent='KCC오토그룹';this.parentNode.insertBefore(w,this);">
-                <div class="kcc-hero-badge">★ 국내 최고 랜드로버 공식 딜러사</div>
                 <div class="kcc-hero-eyebrow">KCC AUTO GROUP · SINCE 1989</div>
-                <div class="kcc-hero-title">KCC오토그룹</div>
+                <div class="kcc-hero-title">국내 최고 랜드로버 공식 딜러사</div>
+                <hr class="kcc-hero-rule">
+                <div class="kcc-hero-headline">
+                    KCC오토모빌은 전시장 5개, 서비스센터 6개를 운영하는<br>국내 최대 재규어 랜드로버 공식 딜러입니다.
+                </div>
                 <div class="kcc-hero-tagline">
                     <b>6개 딜러사</b> · <b>7개 프리미엄 브랜드</b> · <b>전시장 27개</b> · <b>서비스센터 40개+</b> 전국 네트워크
                 </div>
             </div>
 
-            <!-- ===== 핵심 메시지 — 국내 최고 랜드로버 딜러사 부각 ===== -->
+            <!-- ===== 통계 카드 — Land Rover 스타일 균일한 미니멀 그리드 ===== -->
             <div class="vh-section">
-                <div class="vh-section-label" style="font-size:17px;font-weight:700">왜 KCC오토모빌에서 구매해야 할까요?</div>
-                <div class="kcc-highlight-card">
-                    <div class="kcc-highlight-title">국내 최대 재규어 랜드로버 공식 딜러</div>
-                    <div class="kcc-highlight-body">
-                        KCC오토모빌은 <b>전시장 5개, 서비스센터 6개</b>를 운영하는 <b style="color:var(--green)">국내 최대 재규어 랜드로버 공식 딜러</b>입니다.<br>
-                        <b>서초 · 분당 · 일산 · 원주 · 송파</b> 전시장과, <b>성남 · 서초양재 · 분당 · 일산 · 원주 · 강동</b> 서비스센터를 통해<br>
-                        <b>구매 상담부터 출고, 정기 점검, 사고 수리까지 차량의 전 생애주기를 책임집니다.</b>
-                    </div>
-                </div>
-
-                <!-- ===== 통계 카드 — 첫 인상용으로 글자 크게 ===== -->
                 <div class="kcc-stat-grid">
                     <div class="kcc-stat">
                         <div class="kcc-stat-num">5<span>개</span></div>
@@ -2346,9 +2337,19 @@ body.ap-mobile-fs .ap-fs-close:active{background:rgba(0,0,0,0.85)}
                         <div class="kcc-stat-num">6<span>개</span></div>
                         <div class="kcc-stat-label">서비스센터</div>
                     </div>
-                    <div class="kcc-stat kcc-stat-feature">
-                        <div class="kcc-stat-num">No.<span style="font-size:0.85em">1</span></div>
+                    <div class="kcc-stat">
+                        <div class="kcc-stat-num">No.<span style="font-size:0.6em">1</span></div>
                         <div class="kcc-stat-label">국내 최대 랜드로버 딜러</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== 본문 메시지 ===== -->
+            <div class="vh-section">
+                <div class="kcc-highlight-card">
+                    <div class="kcc-highlight-title">전 생애주기를 책임지는 공식 딜러</div>
+                    <div class="kcc-highlight-body">
+                        <b>서초 · 분당 · 일산 · 원주 · 송파</b> 전시장과 <b>성남 · 서초양재 · 분당 · 일산 · 원주 · 강동</b> 서비스센터를 통해 구매 상담부터 출고, 정기 점검, 사고 수리까지 차량의 전 생애주기를 책임집니다.
                     </div>
                 </div>
 
