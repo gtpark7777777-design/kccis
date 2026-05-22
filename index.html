@@ -1408,6 +1408,24 @@ select.config-select:focus{outline:none;border-color:var(--text)}
 }
 
 
+
+/* ===== 모바일 반응형 패치 (2026-05) ===== */
+@media (max-width:760px){
+    .site-header{padding:0 14px;height:54px}
+    .wordmark{font-size:11px;letter-spacing:0.18em;white-space:nowrap}
+    .right-meta{font-size:11px;letter-spacing:0.18em;gap:12px}
+    .subnav{padding:0 14px;gap:18px;height:46px}
+    .subnav a,.subnav a[href]{font-size:12px;white-space:nowrap;flex-shrink:0;word-break:keep-all;letter-spacing:0.01em}
+    .vh-title{font-size:24px;line-height:1.25}
+    .vh-eyebrow{font-size:10px;letter-spacing:0.24em}
+    .ap-frame{min-height:480px}
+    .stage{padding:24px 18px}
+}
+@media (max-width:380px){
+    .wordmark{font-size:10px;letter-spacing:0.14em}
+    .subnav a,.subnav a[href]{font-size:11px}
+    .subnav{gap:14px}
+}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
