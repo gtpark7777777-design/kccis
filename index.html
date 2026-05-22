@@ -1392,6 +1392,147 @@ select.config-select:focus{outline:none;border-color:var(--text)}
 .ap-controls{display:none !important}
 
 /* ========================================
+   KCC오토그룹 탭 — 첫 인상 강화용 히어로 + 통계 카드
+   ======================================== */
+.kcc-hero{
+    margin:24px 0 32px;
+    padding:48px 32px 40px;
+    background:linear-gradient(135deg,#fafaf8 0%,#f0f0ec 100%);
+    border:1px solid var(--line);
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+}
+.kcc-hero::before{
+    content:'';
+    position:absolute;top:0;left:0;right:0;height:4px;
+    background:linear-gradient(90deg,var(--green) 0%,#d4af37 50%,var(--green) 100%);
+}
+.kcc-hero-logo{
+    display:block;
+    max-width:280px;width:60%;height:auto;
+    margin:0 auto 20px;
+    object-fit:contain;
+}
+/* 로고 파일이 없을 때 자동 표시되는 텍스트 폴백 (JS onerror에서 삽입) */
+.kcc-hero-wordmark{
+    font-size:36px;font-weight:800;letter-spacing:-0.02em;
+    color:var(--text);margin-bottom:20px;
+    font-family:'Inter','Pretendard',-apple-system,sans-serif;
+}
+.kcc-hero-badge{
+    display:inline-block;
+    padding:8px 22px;
+    background:var(--text);color:#d4af37;
+    font-size:13px;font-weight:700;letter-spacing:0.12em;
+    margin-bottom:18px;border-radius:0;
+    box-shadow:0 4px 12px rgba(0,0,0,0.15);
+}
+.kcc-hero-eyebrow{
+    font-size:11px;letter-spacing:0.32em;
+    color:var(--text-3);font-weight:600;
+    margin-bottom:10px;
+}
+.kcc-hero-title{
+    font-size:42px;font-weight:800;
+    letter-spacing:-0.025em;color:var(--text);
+    margin-bottom:14px;line-height:1.1;
+    font-family:'Inter','Pretendard',-apple-system,sans-serif;
+}
+.kcc-hero-tagline{
+    font-size:15px;color:var(--text-2);
+    letter-spacing:-0.005em;line-height:1.7;
+    max-width:700px;margin:0 auto;
+}
+.kcc-hero-tagline b{color:var(--text);font-weight:700}
+
+@media(max-width:700px){
+    .kcc-hero{padding:32px 18px 28px;margin:18px 0 24px}
+    .kcc-hero-logo{max-width:220px;width:65%}
+    .kcc-hero-wordmark{font-size:28px}
+    .kcc-hero-badge{font-size:11px;padding:7px 16px;letter-spacing:0.08em}
+    .kcc-hero-title{font-size:30px}
+    .kcc-hero-tagline{font-size:13px}
+}
+
+/* ===== 핵심 메시지 카드 ===== */
+.kcc-highlight-card{
+    margin-top:14px;padding:24px 28px;
+    background:#fff;
+    border:1px solid var(--line);
+    border-left:4px solid var(--green);
+    box-shadow:0 2px 8px rgba(0,0,0,0.04);
+}
+.kcc-highlight-title{
+    font-size:18px;font-weight:700;color:var(--text);
+    margin-bottom:12px;letter-spacing:-0.015em;
+}
+.kcc-highlight-body{
+    font-size:14.5px;color:var(--text-2);line-height:1.85;
+    letter-spacing:-0.005em;
+}
+.kcc-highlight-body b{color:var(--text);font-weight:600}
+
+/* ===== 통계 카드 — 큰 숫자로 첫 인상 강화 ===== */
+.kcc-stat-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);
+    gap:14px;margin-top:20px;
+}
+.kcc-stat{
+    padding:30px 18px;
+    background:var(--bg-soft-2);
+    border:1px solid var(--line);
+    border-radius:6px;
+    text-align:center;
+    transition:transform 0.2s, box-shadow 0.2s;
+}
+.kcc-stat:hover{
+    transform:translateY(-3px);
+    box-shadow:0 8px 22px rgba(0,0,0,0.08);
+}
+.kcc-stat-num{
+    font-size:48px;font-weight:800;
+    color:var(--green);line-height:1;
+    letter-spacing:-0.03em;
+    font-variant-numeric:tabular-nums;
+    font-family:'Inter','Pretendard',-apple-system,sans-serif;
+}
+.kcc-stat-num span{
+    font-size:20px;font-weight:600;
+    margin-left:3px;letter-spacing:0;
+}
+.kcc-stat-label{
+    font-size:13.5px;color:var(--text-2);
+    margin-top:10px;font-weight:500;
+    letter-spacing:-0.005em;
+}
+/* No.1 카드 강조 — 골드 배경 */
+.kcc-stat.kcc-stat-feature{
+    background:linear-gradient(135deg,#1a1a1a 0%,#2a2a2a 100%);
+    border-color:#d4af37;
+}
+.kcc-stat.kcc-stat-feature .kcc-stat-num{color:#d4af37}
+.kcc-stat.kcc-stat-feature .kcc-stat-label{color:rgba(255,255,255,0.85);font-weight:600}
+
+@media(max-width:700px){
+    .kcc-stat-grid{grid-template-columns:1fr;gap:10px}
+    .kcc-stat{padding:24px 16px}
+    .kcc-stat-num{font-size:40px}
+    .kcc-highlight-card{padding:18px 20px}
+    .kcc-highlight-title{font-size:16px}
+    .kcc-highlight-body{font-size:13.5px}
+}
+
+.kcc-closing{
+    margin-top:22px;padding:18px 22px;
+    background:var(--bg-soft);
+    border-left:2px solid var(--text-3);
+    font-size:13.5px;color:var(--text-2);line-height:1.85;
+    letter-spacing:-0.005em;
+}
+.kcc-closing b{color:var(--text);font-weight:600}
+
+/* ========================================
    페이지 썸네일 스트립 — 상단 가로 한 줄, 클릭 시 해당 페이지로 이동
    ======================================== */
 .ap-thumb-strip{
@@ -1619,21 +1760,21 @@ body.ap-mobile-fs .ap-fs-close:active{background:rgba(0,0,0,0.85)}
 <nav class="subnav">
     <a class="active" data-tab="info">차량 정보</a>
     <a data-tab="calc">차량 구성</a>
-    <a href="https://www.landroverkorea.co.kr/build-your-own/index.html" target="_blank" rel="noopener">나만의 차량 만들기</a>
-    <a data-tab="defacc">DEFENDER 옵션 · 액세서리</a>
+    <a data-tab="finance">금융혜택</a>
+    <a data-tab="promo">프로모션</a>
     <a data-tab="inventory">재고표</a>
+    <a data-tab="vinsearch">차량 검색</a>
     <a data-tab="dashboard">대시보드</a>
+    <a href="https://www.landroverkorea.co.kr/build-your-own/index.html" target="_blank" rel="noopener">나만의 차량 만들기</a>
+    <a data-tab="defacc">디팬더 악세사리</a>
     <a href="https://kbeasy.kbcapital.co.kr/ss/mm/MM010112.kbc#noback" target="_blank">차easy</a>
     <a data-tab="onecare">ONE CARE</a>
     <a data-tab="onelife">ONELIFE</a>
     <a data-tab="osa">OSA</a>
     <a data-tab="ost">OST</a>
     <a href="https://cxp.my.site.com/GuestBook/s/" target="_blank">GuestBook</a>
-    <a data-tab="finance">금융혜택</a>
-    <a data-tab="promo">프로모션</a>
     <a data-tab="testdrive">시승코스</a>
     <a data-tab="kccgroup">KCC오토그룹</a>
-    <a data-tab="vinsearch">차량 검색</a>
 </nav>
 
 <div class="layout">
@@ -2171,39 +2312,48 @@ body.ap-mobile-fs .ap-fs-close:active{background:rgba(0,0,0,0.85)}
         </div>
 
         <div class="approach-view" id="kccgroupView" style="display:none">
-            <div class="vh-head">
-                <div class="vh-eyebrow">KCC AUTO GROUP</div>
-                <div class="vh-title">KCC오토그룹</div>
-                <div class="vh-tagline">6개 딜러사 · 7개 프리미엄 브랜드 · 전시장 27개 · 서비스센터 40개+ 전국 네트워크</div>
+            <!-- ===== 히어로 영역 — 손님이 처음 보는 화면이므로 시각적 무게감 강화 ===== -->
+            <div class="kcc-hero">
+                <img class="kcc-hero-logo" src="assets/kcc_auto_group_logo.png" alt="KCC오토그룹"
+                     onerror="this.style.display='none';var w=document.createElement('div');w.className='kcc-hero-wordmark';w.textContent='KCC오토그룹';this.parentNode.insertBefore(w,this);">
+                <div class="kcc-hero-badge">★ 국내 최고 랜드로버 공식 딜러사</div>
+                <div class="kcc-hero-eyebrow">KCC AUTO GROUP · SINCE 1989</div>
+                <div class="kcc-hero-title">KCC오토그룹</div>
+                <div class="kcc-hero-tagline">
+                    <b>6개 딜러사</b> · <b>7개 프리미엄 브랜드</b> · <b>전시장 27개</b> · <b>서비스센터 40개+</b> 전국 네트워크
+                </div>
             </div>
 
-            <!-- 왜 KCC오토모빌인가 -->
+            <!-- ===== 핵심 메시지 — 국내 최고 랜드로버 딜러사 부각 ===== -->
             <div class="vh-section">
-                <div class="vh-section-label" style="font-size:15px">왜 KCC오토모빌에서 구매해야 할까요?</div>
-                <div style="margin-top:12px;padding:20px 24px;background:var(--bg-soft);border-left:3px solid var(--green);border-radius:0">
-                    <div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:8px">국내 최대 재규어 랜드로버 공식 딜러</div>
-                    <div style="font-size:13px;color:var(--text-2);line-height:1.8">
-                        KCC오토모빌은 <b>전시장 5개, 서비스센터 6개</b>를 운영하는 국내 최대 재규어 랜드로버 공식 딜러입니다.<br>
-                        서초 · 분당 · 일산 · 원주 · 송파 전시장과, 성남 · 서초양재 · 분당 · 일산 · 원주 · 강동 서비스센터를 통해<br>
-                        <b>구매 상담부터 출고, 정기점검, 사고수리까지 차량의 전 생애주기를 책임집니다.</b>
+                <div class="vh-section-label" style="font-size:17px;font-weight:700">왜 KCC오토모빌에서 구매해야 할까요?</div>
+                <div class="kcc-highlight-card">
+                    <div class="kcc-highlight-title">국내 최대 재규어 랜드로버 공식 딜러</div>
+                    <div class="kcc-highlight-body">
+                        KCC오토모빌은 <b>전시장 5개, 서비스센터 6개</b>를 운영하는 <b style="color:var(--green)">국내 최대 재규어 랜드로버 공식 딜러</b>입니다.<br>
+                        <b>서초 · 분당 · 일산 · 원주 · 송파</b> 전시장과, <b>성남 · 서초양재 · 분당 · 일산 · 원주 · 강동</b> 서비스센터를 통해<br>
+                        <b>구매 상담부터 출고, 정기 점검, 사고 수리까지 차량의 전 생애주기를 책임집니다.</b>
                     </div>
                 </div>
-                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:16px">
-                    <div style="padding:16px;background:var(--bg-soft-2);border:1px solid var(--line);border-radius:8px;text-align:center">
-                        <div style="font-size:22px;font-weight:700;color:var(--green)">5개</div>
-                        <div style="font-size:12px;color:var(--text-3);margin-top:4px">전시장</div>
+
+                <!-- ===== 통계 카드 — 첫 인상용으로 글자 크게 ===== -->
+                <div class="kcc-stat-grid">
+                    <div class="kcc-stat">
+                        <div class="kcc-stat-num">5<span>개</span></div>
+                        <div class="kcc-stat-label">전시장</div>
                     </div>
-                    <div style="padding:16px;background:var(--bg-soft-2);border:1px solid var(--line);border-radius:8px;text-align:center">
-                        <div style="font-size:22px;font-weight:700;color:var(--green)">6개</div>
-                        <div style="font-size:12px;color:var(--text-3);margin-top:4px">서비스센터</div>
+                    <div class="kcc-stat">
+                        <div class="kcc-stat-num">6<span>개</span></div>
+                        <div class="kcc-stat-label">서비스센터</div>
                     </div>
-                    <div style="padding:16px;background:var(--bg-soft-2);border:1px solid var(--line);border-radius:8px;text-align:center">
-                        <div style="font-size:22px;font-weight:700;color:var(--green)">No.1</div>
-                        <div style="font-size:12px;color:var(--text-3);margin-top:4px">국내 최대 딜러</div>
+                    <div class="kcc-stat kcc-stat-feature">
+                        <div class="kcc-stat-num">No.<span style="font-size:0.85em">1</span></div>
+                        <div class="kcc-stat-label">국내 최대 랜드로버 딜러</div>
                     </div>
                 </div>
-                <div style="margin-top:16px;font-size:13px;color:var(--text-2);line-height:1.8">
-                    랜드로버는 단순히 차량을 구매하는 것이 아니라, 브랜드 경험 전체를 선택하는 것입니다.<br>
+
+                <div class="kcc-closing">
+                    랜드로버는 단순히 차량을 구매하는 것이 아니라, <b>브랜드 경험 전체를 선택</b>하는 것입니다.<br>
                     KCC오토모빌은 전문 영업사원의 1:1 맞춤 상담, 출고 후 정기 케어 프로그램, 전국 서비스 네트워크를 통한 신속한 A/S까지<br>
                     <b>구매 전 · 중 · 후 모든 단계에서 고객과 함께합니다.</b>
                 </div>
