@@ -3870,6 +3870,12 @@ function setActiveTab(name){
 function enterApproachFullscreen(){
     const el=document.getElementById('approachView');
     if(!el)return;
+    /* 다른 view들 모두 숨김 — 모바일(fullscreen API 미지원)에서도 어프로치북만 보이게 */
+    document.querySelectorAll('#vehicleView,#resultView,#onecareView,#defaccView,#inventoryView,#dashboardView,#vinsearchView,#osaView,#ostView,#onelifeView,#financeView,#promoView,#kccgroupView,#testdriveView').forEach(v=>{if(v)v.style.display='none';});
+    /* 가격바/우측 계산 패널 숨김 */
+    document.body.classList.add('no-price-bar');
+    document.body.classList.add('no-configurator');
+    document.body.classList.remove('vinsearch-mode');
     el.style.display='flex';
     const req=el.requestFullscreen||el.webkitRequestFullscreen||el.mozRequestFullScreen||el.msRequestFullscreen;
     if(req){
