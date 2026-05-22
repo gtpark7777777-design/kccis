@@ -598,7 +598,11 @@ body.home-active .home-view{
 .approach-view:fullscreen .ap-head,
 .approach-view:-webkit-full-screen .ap-head,
 .approach-view:fullscreen .ap-fallback,
-.approach-view:-webkit-full-screen .ap-fallback{display:none}
+.approach-view:-webkit-full-screen .ap-fallback,
+.approach-view:fullscreen .ap-controls,
+.approach-view:-webkit-full-screen .ap-controls,
+.approach-view:fullscreen .ap-nav-arrow,
+.approach-view:-webkit-full-screen .ap-nav-arrow{display:none !important}
 .approach-view:fullscreen .ap-frame-wrap,
 .approach-view:-webkit-full-screen .ap-frame-wrap{
     border:0;background:#000;min-height:0;
@@ -659,12 +663,28 @@ body.home-active .home-view{
     gap:0;border:1px solid var(--line);
 }
 .oc-card{
-    padding:22px 22px 24px;
+    padding:0 0 24px;
     border-right:1px solid var(--line);
     border-bottom:1px solid var(--line);
+    overflow:hidden;
 }
 .oc-card:nth-child(2n){border-right:0}
 .oc-card:nth-last-child(-n+2){border-bottom:0}
+/* 카드 상단 공식 이미지 (jlr.scene7.com) — 16:9, 카드 폭 가득 채움 */
+.oc-card-img{
+    display:block;width:100%;
+    aspect-ratio:16/9;
+    object-fit:cover;object-position:center;
+    background:linear-gradient(135deg,#2a2a2a 0%,#1a1a1a 100%);
+    border-bottom:1px solid var(--line);
+    margin-bottom:0;
+}
+.oc-card > .oc-card-num,
+.oc-card > .oc-card-title,
+.oc-card > .oc-card-desc{
+    padding-left:22px;padding-right:22px;
+}
+.oc-card > .oc-card-num{margin-top:18px}
 .oc-card-num{
     font-size:11px;color:var(--text-3);
     font-weight:500;letter-spacing:0.1em;
@@ -1387,11 +1407,19 @@ select.config-select:focus{outline:none;border-color:var(--text)}
    ======================================== */
 body.ap-mobile-fs > header,
 body.ap-mobile-fs > nav.subnav,
+body.ap-mobile-fs > header.site-header,
+body.ap-mobile-fs .price-bar,
+body.ap-mobile-fs .configurator,
 body.ap-mobile-fs #approachView .ap-head,
 body.ap-mobile-fs #approachView .ap-controls,
+body.ap-mobile-fs #approachView .ap-nav-arrow,
 body.ap-mobile-fs .ap-fallback{display:none !important}
+body.ap-mobile-fs{overflow:hidden !important}
+body.ap-mobile-fs .layout{padding:0 !important;margin:0 !important}
+body.ap-mobile-fs .stage{padding:0 !important;margin:0 !important;background:#fff}
 body.ap-mobile-fs #approachView{
     position:fixed !important;top:0;left:0;right:0;bottom:0;
+    width:100vw !important;height:100vh !important;
     z-index:9999;
     padding:0 !important;
     background:#fff;
@@ -1570,15 +1598,15 @@ body.ap-mobile-fs .ap-fs-close:active{background:rgba(0,0,0,0.85)}
                     <canvas id="apCanvas"></canvas>
                     <button class="ap-nav-arrow right" id="apNextArrow" type="button" aria-label="다음 페이지">›</button>
                 </div>
-                <div class="ap-controls">
-                    <button class="ap-ctrl-btn" id="apPrev">◀ 이전</button>
-                    <span class="ap-page-info" id="apPageInfo">— / —</span>
-                    <button class="ap-ctrl-btn" id="apNext">다음 ▶</button>
-                    <span style="flex:1"></span>
-                    <button class="ap-ctrl-btn" id="apZoomOut">−</button>
-                    <span class="ap-zoom-info" id="apZoomInfo">100%</span>
-                    <button class="ap-ctrl-btn" id="apZoomIn">+</button>
-                    <button class="ap-ctrl-btn" id="apFitWidth">화면 맞춤</button>
+                <!-- ap-controls 하단 버튼 영역 삭제됨 (2026-05-22) — 페이지 이동은 좌우 화살표(ap-nav-arrow) + 키보드 좌우 키 -->
+                <div class="ap-controls" hidden style="display:none !important">
+                    <button class="ap-ctrl-btn" id="apPrev" hidden>◀ 이전</button>
+                    <span class="ap-page-info" id="apPageInfo" hidden>— / —</span>
+                    <button class="ap-ctrl-btn" id="apNext" hidden>다음 ▶</button>
+                    <button class="ap-ctrl-btn" id="apZoomOut" hidden>−</button>
+                    <span class="ap-zoom-info" id="apZoomInfo" hidden>100%</span>
+                    <button class="ap-ctrl-btn" id="apZoomIn" hidden>+</button>
+                    <button class="ap-ctrl-btn" id="apFitWidth" hidden>화면 맞춤</button>
                 </div>
             </div>
             <!-- 가상 풀스크린 모드 닫기 버튼 (모바일에서 fullscreen API 미지원 시 사용) -->
@@ -1641,41 +1669,49 @@ body.ap-mobile-fs .ap-fs-close:active{background:rgba(0,0,0,0.85)}
                 <div class="vh-section-label">ONE CARE 핵심 혜택</div>
                 <div class="oc-grid">
                     <div class="oc-card">
+                        <img class="oc-card-img" src="https://jlr.scene7.com/is/image/jlr/RR25GL_303101946_008_FEMALE?fmt=jpg&wid=720&qlt=85" alt="5년 무상 보증" loading="lazy">
                         <div class="oc-card-num">01</div>
                         <div class="oc-card-title">5년 무상 보증</div>
                         <div class="oc-card-desc">신차 결함에 대한 무상 수리·교환을 5년 / 20만km까지 보장합니다.</div>
                     </div>
                     <div class="oc-card">
+                        <img class="oc-card-img" src="https://jlr.scene7.com/is/image/jlr/RR25GL_303101946_009_ALT_16x9?fmt=jpg&wid=720&qlt=85" alt="5년 서비스 플랜" loading="lazy">
                         <div class="oc-card-num">02</div>
                         <div class="oc-card-title">5년 서비스 플랜</div>
                         <div class="oc-card-desc">정기 점검·소모품 교체 등 권장 정비를 무상으로 제공받으실 수 있습니다.</div>
                     </div>
                     <div class="oc-card">
+                        <img class="oc-card-img" src="https://jlr.scene7.com/is/image/jlr/L46024GL_303101569_021_SV?fmt=jpg&wid=720&qlt=85" alt="픽업 &amp; 딜리버리" loading="lazy">
                         <div class="oc-card-num">03</div>
                         <div class="oc-card-title">픽업 &amp; 딜리버리</div>
                         <div class="oc-card-desc">전화 한 통으로 원하시는 장소에서 차량을 픽업, 정비 후 안전하게 인도해 드립니다.</div>
                     </div>
                     <div class="oc-card">
+                        <img class="oc-card-img" src="https://jlr.scene7.com/is/image/jlr/09.31.13_UK_HOB_Brand?fmt=jpg&wid=720&qlt=85" alt="긴급 출동 서비스" loading="lazy">
                         <div class="oc-card-num">04</div>
                         <div class="oc-card-title">긴급 출동 서비스</div>
                         <div class="oc-card-desc">차량 운행 불가 시 견인 및 목적지·서비스센터 이동 비용을 지원합니다.</div>
                     </div>
                     <div class="oc-card">
+                        <img class="oc-card-img" src="https://jlr.scene7.com/is/image/jlr/LRAPO_1283?fmt=jpg&wid=720&qlt=85" alt="자기부담금 지원" loading="lazy">
                         <div class="oc-card-num">05</div>
                         <div class="oc-card-title">자기부담금 지원</div>
                         <div class="oc-card-desc">사고 시 자기부담금을 멤버십 등급에 따라 <b>최소 10만 원 ~ 최대 30만 원</b>까지 지원합니다.</div>
                     </div>
                     <div class="oc-card">
+                        <img class="oc-card-img" src="https://jlr.scene7.com/is/image/jlr/RR25GL_303101946_001_MALE_16x9?fmt=jpg&wid=720&qlt=85" alt="사고 수리 서비스" loading="lazy">
                         <div class="oc-card-num">06</div>
                         <div class="oc-card-title">사고 수리 서비스</div>
                         <div class="oc-card-desc">공식 인증 바디샵에서 정품 부품과 표준 공정으로 차량을 복원합니다.</div>
                     </div>
                     <div class="oc-card">
+                        <img class="oc-card-img" src="https://jlr.scene7.com/is/image/jlr/L46025GL_303103153_019?fmt=jpg&wid=720&qlt=85" alt="커넥티드 서비스" loading="lazy">
                         <div class="oc-card-num">07</div>
                         <div class="oc-card-title">커넥티드 서비스</div>
                         <div class="oc-card-desc">Remote-SOS 긴급 출동, 원격 차량 제어, 데이터 플랜이 5년 동안 제공됩니다.</div>
                     </div>
                     <div class="oc-card">
+                        <img class="oc-card-img" src="https://jlr.scene7.com/is/image/jlr/09.33.28_UK_HOB_Brand?fmt=jpg&wid=720&qlt=85" alt="ONE CARE 앱" loading="lazy">
                         <div class="oc-card-num">08</div>
                         <div class="oc-card-title">ONE CARE 앱</div>
                         <div class="oc-card-desc">서비스 예약·픽업 딜리버리·멤버십 관리까지 터치 한 번으로 처리합니다.</div>
@@ -4012,8 +4048,34 @@ renderVehicleInfo();
 updateLabels();
 /* 초기 진입 탭이 차량 구성(calc)이 아니면 우측 계산 패널 + 하단 가격바 숨김 */
 (function(){var __a=document.querySelector('.subnav a.active');var __t=__a?__a.dataset.tab:null;if(__t!=='calc'){document.body.classList.add('no-configurator');document.body.classList.add('no-price-bar');}})();
-/* HOME 시네마틱 풀스크린 — "상담 시작하기" 클릭 시 fade-out 후 차량 구성 화면 진입 */
-(function(){var __cta=document.getElementById('homeCtaBtn');var __home=document.getElementById('homeView');if(!__cta||!__home)return;__cta.addEventListener('click',function(){__home.classList.add('home-leaving');setTimeout(function(){document.body.classList.remove('home-active');__home.classList.remove('home-leaving');if(typeof setActiveTab==='function')setActiveTab('calc');if(typeof showView==='function')showView('calc');},600);});})();
+/* HOME 시네마틱 풀스크린 — "상담 시작하기" 클릭 시 fade-out 후 KCC오토그룹 화면 진입 (2026-05-22 변경)
+   + 모바일/태블릿(<1100px)이면 사용자 제스처 직후 document.documentElement에 fullscreen 요청해
+     브라우저 주소창/하단 바를 숨겨 화면을 꽉차게 시작 */
+(function(){
+    var __cta=document.getElementById('homeCtaBtn');
+    var __home=document.getElementById('homeView');
+    if(!__cta||!__home)return;
+    __cta.addEventListener('click',function(){
+        /* (A) 모바일/태블릿: 사용자 제스처(click) 안에서 fullscreen 요청 — Chrome/Safari 모바일 주소창 숨김 */
+        if(window.innerWidth < 1100){
+            var de=document.documentElement;
+            try{
+                if(de.requestFullscreen) de.requestFullscreen().catch(function(){});
+                else if(de.webkitRequestFullscreen) de.webkitRequestFullscreen();
+            }catch(_){}
+            /* iOS Safari: 스크롤로 주소창 자동 숨김 트리거 */
+            try{window.scrollTo(0,1);setTimeout(function(){window.scrollTo(0,0);},10);}catch(_){}
+        }
+        __home.classList.add('home-leaving');
+        setTimeout(function(){
+            document.body.classList.remove('home-active');
+            __home.classList.remove('home-leaving');
+            if(typeof setActiveTab==='function')setActiveTab('kccgroup');
+            if(typeof showView==='function')showView('kccgroup');
+            try{window.scrollTo({top:0,left:0,behavior:'instant'});}catch(_){window.scrollTo(0,0);}
+        },600);
+    });
+})();
 /* PDF 버튼 초기화 — MODEL_PDF_MAP 정의 후에 다시 한번 호출 */
 setTimeout(function(){if(typeof MODEL_PDF_MAP!=='undefined' && typeof renderVehicleInfo==='function')renderVehicleInfo();},100);
 
