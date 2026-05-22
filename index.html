@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
 <title>Land Rover · 26MY 차량 구성 | KCC오토모빌 일산</title>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
@@ -1356,6 +1356,77 @@ select.config-select:focus{outline:none;border-color:var(--text)}
     .ap-nav-arrow.left{left:8px}
     .ap-nav-arrow.right{right:8px}
 }
+
+/* ========================================
+   PDF 컨트롤바(이전/다음/줌/화면맞춤) — 전체 디바이스에서 숨김
+   페이지 이동은 좌우 화살표(ap-nav-arrow) + 키보드 좌우 키로
+   ======================================== */
+.ap-controls{display:none !important}
+
+/* ========================================
+   모바일/태블릿 — 어프로치북 컴팩트 + 컨트롤 숨김
+   ======================================== */
+@media(max-width:900px){
+    /* 하단 PDF 컨트롤(이전/다음/-/+/화면맞춤) 완전 숨김 */
+    #approachView .ap-controls{display:none !important}
+    /* ap-head 안의 부가 설명 텍스트 숨김 (헤더+버튼만 컴팩트하게) */
+    #approachView .ap-head .vh-eyebrow,
+    #approachView .ap-head .vh-tagline{display:none !important}
+    #approachView .ap-head .vh-title{font-size:15px;font-weight:600;letter-spacing:-0.01em}
+    #approachView .ap-head{padding:8px 14px;border-bottom:1px solid var(--line)}
+    /* PDF 영역이 viewport에 꽉 차게 */
+    #approachView{padding:0 !important;flex:1;display:flex;flex-direction:column}
+    #approachView .ap-frame-wrap{flex:1;min-height:0}
+    #approachView .ap-pdfjs-wrap{padding:4px}
+}
+
+/* ========================================
+   가상 풀스크린 모드 (전체화면 버튼 클릭 시)
+   header / subnav / ap-head / ap-controls 모두 숨김
+   모바일에서 fullscreen API 미지원 대체용
+   ======================================== */
+body.ap-mobile-fs > header,
+body.ap-mobile-fs > nav.subnav,
+body.ap-mobile-fs #approachView .ap-head,
+body.ap-mobile-fs #approachView .ap-controls,
+body.ap-mobile-fs .ap-fallback{display:none !important}
+body.ap-mobile-fs #approachView{
+    position:fixed !important;top:0;left:0;right:0;bottom:0;
+    z-index:9999;
+    padding:0 !important;
+    background:#fff;
+    margin:0 !important;
+}
+body.ap-mobile-fs #approachView .ap-frame-wrap{
+    height:100vh !important;width:100vw !important;
+    padding:0 !important;margin:0 !important;
+}
+/* 풀스크린 모드에서 PDF.js 컨테이너 + canvas 가 영역 꽉 채우게 */
+body.ap-mobile-fs #approachView .ap-pdfjs-wrap{
+    width:100% !important;height:100% !important;
+    padding:0 !important;margin:0 !important;
+    background:#fff;
+    min-height:0 !important;
+}
+body.ap-mobile-fs #approachView .ap-pdfjs-wrap canvas{
+    max-width:100vw !important;
+    max-height:100vh !important;
+    display:block;margin:0 auto;
+}
+
+/* 풀스크린 모드 닫기 버튼 (× ) — 기본 숨김 */
+.ap-fs-close{display:none}
+body.ap-mobile-fs .ap-fs-close{
+    display:flex;align-items:center;justify-content:center;
+    position:fixed;top:14px;right:14px;
+    width:42px;height:42px;
+    background:rgba(0,0,0,0.65);color:#fff;
+    border:0;border-radius:50%;
+    font-size:24px;font-weight:300;line-height:1;
+    z-index:10000;cursor:pointer;
+    box-shadow:0 2px 8px rgba(0,0,0,0.3);
+}
+body.ap-mobile-fs .ap-fs-close:active{background:rgba(0,0,0,0.85)}
 .approach-view:fullscreen .ap-pdfjs-wrap,
 .approach-view:-webkit-full-screen .ap-pdfjs-wrap{
     min-height:0;width:100%;height:calc(100% - 50px);
@@ -1510,6 +1581,8 @@ select.config-select:focus{outline:none;border-color:var(--text)}
                     <button class="ap-ctrl-btn" id="apFitWidth">화면 맞춤</button>
                 </div>
             </div>
+            <!-- 가상 풀스크린 모드 닫기 버튼 (모바일에서 fullscreen API 미지원 시 사용) -->
+            <button class="ap-fs-close" id="apFsCloseBtn" type="button" aria-label="풀스크린 닫기">×</button>
         </div>
 
         <!-- Vehicle info (차량 구성 탭의 기본 화면) -->
@@ -3822,6 +3895,11 @@ document.getElementById('smsSendBtn').addEventListener('click',()=>{
 // Tab navigation between stage views
 function showView(name){
     document.body.classList.remove('vinsearch-mode');
+    /* 어프로치북이 아닌 다른 탭으로 이동 시 가상 풀스크린 해제 */
+    if(name !== 'info'){
+        document.body.classList.remove('ap-mobile-fs');
+        try{ if(document.fullscreenElement) document.exitFullscreen(); }catch(_){}
+    }
     /* 차량 구성 탭에서만 하단 가격바 + 우측 계산 패널 표시 */
     if(name === 'calc'){
         document.body.classList.remove('no-price-bar');
@@ -3877,6 +3955,15 @@ function enterApproachFullscreen(){
     document.body.classList.add('no-configurator');
     document.body.classList.remove('vinsearch-mode');
     el.style.display='flex';
+    /* 모바일/태블릿 자동 풀스크린: header/subnav도 숨기고 PDF만 꽉 차게 */
+    if(window.innerWidth < 1100){
+        document.body.classList.add('ap-mobile-fs');
+        /* PDF 페이지 fit 재계산 — DOM 변경 직후 + 약간의 지연 후 */
+        if(typeof window.fitPage==='function'){
+            setTimeout(window.fitPage, 100);
+            setTimeout(window.fitPage, 500);
+        }
+    }
     const req=el.requestFullscreen||el.webkitRequestFullscreen||el.mozRequestFullScreen||el.msRequestFullscreen;
     if(req){
         try{ req.call(el).catch(()=>{}); }catch(_){}
@@ -4019,6 +4106,8 @@ window._apPageNum=1;
     }
     // alias for backward compat
     var fitWidth=fitPage;
+    /* enterApproachFullscreen 등 외부에서 호출 가능하도록 window에 노출 */
+    window.fitPage=fitPage;
 
     // Decode base64 and load
     var raw=atob(AP_PDF_B64);
@@ -4031,6 +4120,16 @@ window._apPageNum=1;
         renderPage(1);
         // Auto fit-page on load (한 페이지가 화면에 모두 보이게)
         setTimeout(fitPage,200);
+        /* 모바일/태블릿 첫 진입: 차량 정보 탭이 active이면 자동 풀스크린 */
+        setTimeout(function(){
+            if(window.innerWidth < 1100){
+                var active=document.querySelector('.subnav a.active');
+                if(active && active.dataset.tab==='info'
+                   && !document.body.classList.contains('home-active')){
+                    if(typeof enterApproachFullscreen==='function') enterApproachFullscreen();
+                }
+            }
+        }, 600);
     });
 
     function goPrev(){if(window._apPageNum>1){window._apPageNum--;renderPage(window._apPageNum);fitPage();}}
@@ -4047,10 +4146,32 @@ window._apPageNum=1;
     document.getElementById('apFitWidth').onclick=fitPage;
     document.getElementById('apFullscreenBtn').onclick=function(){
         var el=document.getElementById('approachView');
-        if(el.requestFullscreen) el.requestFullscreen();
-        else if(el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+        /* 가상 풀스크린 — header/subnav/ap-head/ap-controls 모두 숨김 (모바일 대응) */
+        document.body.classList.add('ap-mobile-fs');
+        /* 데스크톱은 native fullscreen API도 함께 시도 (지원 시) */
+        try{
+            if(el.requestFullscreen) el.requestFullscreen().catch(function(){});
+            else if(el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+        }catch(_){}
         setTimeout(fitPage,400);
     };
+    /* 가상 풀스크린 닫기 버튼 (×) */
+    var _apFsClose=document.getElementById('apFsCloseBtn');
+    if(_apFsClose) _apFsClose.onclick=function(){
+        document.body.classList.remove('ap-mobile-fs');
+        try{
+            if(document.fullscreenElement) document.exitFullscreen();
+            else if(document.webkitFullscreenElement) document.webkitExitFullscreen();
+        }catch(_){}
+        setTimeout(fitPage,400);
+    };
+    /* ESC 키로도 가상 풀스크린 해제 */
+    document.addEventListener('keydown',function(e){
+        if(e.key==='Escape' && document.body.classList.contains('ap-mobile-fs')){
+            document.body.classList.remove('ap-mobile-fs');
+            setTimeout(fitPage,300);
+        }
+    });
     document.addEventListener('fullscreenchange',function(){setTimeout(fitPage,300);});
     document.addEventListener('webkitfullscreenchange',function(){setTimeout(fitPage,300);});
 
