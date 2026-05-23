@@ -478,28 +478,61 @@ body.home-active .home-view{
     #inventoryFrameWrap{min-height:460px !important}
 }
 
-/* 차대번호 복사 토스트 */
+/* 차대번호 복사 워크플로우 단계 안내 */
+.inv-howto{
+    display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+    margin-top:8px;padding:8px 12px;
+    background:linear-gradient(135deg,#f7f5ee 0%,#fcfaf5 100%);
+    border:1px solid #d4af6a;border-left:3px solid #b08d3a;
+    border-radius:0 4px 4px 0;
+    font-size:12px;color:var(--text);
+}
+.inv-step{display:inline-flex;align-items:center;gap:4px}
+.inv-step-num{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:18px;height:18px;
+    background:#b08d3a;color:#fff;
+    border-radius:50%;font-weight:700;font-size:11px;
+    margin-right:2px;
+}
+.inv-step-arrow{color:#b08d3a;font-weight:700;margin:0 2px}
+.inv-howto kbd{
+    display:inline-block;
+    padding:1px 6px;
+    font-family:'SF Mono','Monaco','Consolas',monospace;
+    font-size:11px;font-weight:600;
+    background:#fff;border:1px solid #b3b3b3;
+    border-bottom-width:2px;border-radius:3px;
+    color:#333;margin:0 1px;
+    box-shadow:0 1px 0 rgba(0,0,0,0.08);
+}
+
+/* 차대번호 복사 토스트 — 가시성 강화 */
 .vqp-toast{
     position:fixed;
-    left:50%;bottom:60px;transform:translateX(-50%);
+    left:50%;bottom:80px;transform:translateX(-50%);
     background:#0a2540;color:#fff;
-    padding:11px 22px;
-    border-radius:24px;
-    font-size:13px;font-weight:500;
-    box-shadow:0 8px 24px rgba(0,0,0,0.3);
+    padding:14px 28px;
+    border-radius:28px;
+    font-size:14.5px;font-weight:600;
+    box-shadow:0 12px 32px rgba(0,0,0,0.35);
     z-index:9999;
     pointer-events:none;
-    max-width:560px;
-    animation:vqpToastIn 0.2s ease-out;
+    max-width:620px;
+    border:2px solid #d4af6a;
+    animation:vqpToastIn 0.25s ease-out;
 }
-.vqp-toast.vqp-toast-warn{background:#8a4a0a}
+.vqp-toast.vqp-toast-warn{
+    background:#8a4a0a;border-color:#d4af6a;
+}
 .vqp-toast .vqp-toast-vin{
     font-family:'SF Mono','Monaco','Consolas',monospace;
-    color:#d4af6a;margin-left:6px;font-weight:600;letter-spacing:0.02em;
+    color:#d4af6a;margin-left:8px;font-weight:700;letter-spacing:0.03em;
+    font-size:15px;
 }
 @keyframes vqpToastIn{
-    from{opacity:0;transform:translateX(-50%) translateY(10px)}
-    to{opacity:1;transform:translateX(-50%) translateY(0)}
+    from{opacity:0;transform:translateX(-50%) translateY(14px) scale(0.96)}
+    to{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}
 }
 
 /* 차량 검색 (VIN search) */
@@ -2183,7 +2216,14 @@ body.ap-mobile-fs .ap-fs-close:active{background:rgba(0,0,0,0.85)}
                 <div>
                     <div class="vh-eyebrow">INVENTORY · 재고 현황</div>
                     <div class="vh-title">KCC오토모빌 재고표</div>
-                    <div class="vh-tagline">현재 보유 중인 즉시 출고 가능 차량 재고 현황입니다. <span style="color:var(--text-2);font-size:12px">· <b>Ctrl/⌘ + 휠</b> 확대·축소 · 시트에서 차대번호 더블클릭 → <b>Cmd+C</b> → 우측 <b>📋 차대번호 복사</b> 버튼으로 깔끔하게 정리</span></div>
+                    <div class="vh-tagline">현재 보유 중인 즉시 출고 가능 차량 재고 현황입니다.</div>
+                    <div class="inv-howto">
+                        <span class="inv-step"><span class="inv-step-num">①</span> 시트에서 차대번호 셀 <b>드래그·선택</b></span>
+                        <span class="inv-step-arrow">→</span>
+                        <span class="inv-step"><span class="inv-step-num">②</span> <kbd>⌘</kbd><kbd>C</kbd> (Mac) / <kbd>Ctrl</kbd><kbd>C</kbd> (Win)</span>
+                        <span class="inv-step-arrow">→</span>
+                        <span class="inv-step"><span class="inv-step-num">③</span> <b>📋 차대번호 복사</b> 버튼 클릭</span>
+                    </div>
                 </div>
                 <div class="ap-actions">
                     <button class="ap-btn-zoom" data-zoom-target="inventory" data-zoom="-" title="축소 (Ctrl/⌘ + −)">−</button>
@@ -5370,17 +5410,17 @@ function showOptionPopup(code, desc, row){
         try{
             var raw = await navigator.clipboard.readText();
             if(!raw || !raw.trim()){
-                showToast('⚠ 클립보드가 비어 있습니다 · 시트 셀 더블클릭 후 <b>⌘+C</b>를 먼저 누르세요', 'warn');
+                showToast('⚠ 클립보드가 비어 있습니다 ·<br>먼저 시트 셀을 드래그하여 선택한 뒤 <b>⌘+C</b> (Mac) 또는 <b>Ctrl+C</b> (Win)를 누르세요', 'warn');
                 return;
             }
             var vin = extractVin(raw);
             if(!vin){
-                showToast('⚠ 클립보드에서 차대번호 형식을 찾지 못했습니다: <span style="font-family:monospace">' + escHtml(raw.substring(0,40)) + '</span>', 'warn');
+                showToast('⚠ 차대번호 형식을 찾지 못했습니다 ·<br>클립보드 내용: <span style="font-family:monospace;color:#fff">' + escHtml(raw.substring(0,50)) + '</span>', 'warn');
                 return;
             }
             // 깔끔하게 VIN만 다시 클립보드에 기록
             await writeClipboard(vin);
-            showToast('✓ 차대번호 복사 <span class="vqp-toast-vin">' + escHtml(vin) + '</span>');
+            showToast('✓ 차대번호 복사 완료 <span class="vqp-toast-vin">' + escHtml(vin) + '</span>');
         }catch(e){
             // 권한 거부 등
             var msg = e && e.name === 'NotAllowedError'
