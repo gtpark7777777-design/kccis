@@ -2140,13 +2140,13 @@ body.ap-mobile-fs .ap-fs-close:active{background:rgba(0,0,0,0.85)}
                 <div>
                     <div class="vh-eyebrow">INVENTORY · 재고 현황</div>
                     <div class="vh-title">KCC오토모빌 재고표</div>
-                    <div class="vh-tagline">현재 보유 중인 즉시 출고 가능 차량 재고 현황입니다.</div>
+                    <div class="vh-tagline">현재 보유 중인 즉시 출고 가능 차량 재고 현황입니다. <span style="color:var(--text-2);font-size:12px">· 표 위에서 <b>Ctrl/⌘ + 마우스휠</b>로 재고표만 확대·축소 가능</span></div>
                 </div>
                 <div class="ap-actions">
-                    <button class="ap-btn-zoom" data-zoom-target="inventory" data-zoom="-">−</button>
+                    <button class="ap-btn-zoom" data-zoom-target="inventory" data-zoom="-" title="축소 (Ctrl/⌘ + −)">−</button>
                     <span class="ap-zoom-label" id="invZoomLabel">100%</span>
-                    <button class="ap-btn-zoom" data-zoom-target="inventory" data-zoom="+">+</button>
-                    <button class="ap-btn-zoom" data-zoom-target="inventory" data-zoom="0">초기화</button>
+                    <button class="ap-btn-zoom" data-zoom-target="inventory" data-zoom="+" title="확대 (Ctrl/⌘ + +)">+</button>
+                    <button class="ap-btn-zoom" data-zoom-target="inventory" data-zoom="0" title="원래 크기 (Ctrl/⌘ + 0)">초기화</button>
                     <a class="ap-btn solid" href="https://docs.google.com/spreadsheets/d/1DDfe6K9WttZkisBP4CqahiQDd1gT1SkTThp4rM8fGc0/edit?gid=0#gid=0" target="_blank" rel="noopener">구글시트에서 열기</a>
                 </div>
             </div>
@@ -5163,9 +5163,11 @@ function showOptionPopup(code, desc, row){
     else bind();
 })();
 
-/* === 재고표 iframe 줌 기능 === */
+/* === 재고표 iframe 줌 기능 (버튼 + Ctrl/⌘ 휠 + Ctrl/⌘ +/-/0) === */
 (function(){
     var invZoom = 1.0;
+    var MIN = 0.5, MAX = 2.5, STEP = 0.1;
+    function clamp(v){ return Math.max(MIN, Math.min(MAX, Math.round(v * 10) / 10)); }
     function applyInvZoom(){
         var ifr = document.getElementById('inventoryFrame');
         var lbl = document.getElementById('invZoomLabel');
@@ -5176,16 +5178,51 @@ function showOptionPopup(code, desc, row){
         ifr.style.height = (100 / invZoom) + '%';
         if(lbl) lbl.textContent = Math.round(invZoom * 100) + '%';
     }
+    function setZoom(op){
+        if(op === '+') invZoom = clamp(invZoom + STEP);
+        else if(op === '-') invZoom = clamp(invZoom - STEP);
+        else if(op === '0') invZoom = 1.0;
+        applyInvZoom();
+    }
+    function isInventoryActive(){
+        var view = document.getElementById('inventoryView');
+        return view && view.style.display !== 'none' && view.offsetParent !== null;
+    }
     function bindZoom(){
+        // +/- 버튼
         document.querySelectorAll('button[data-zoom-target="inventory"]').forEach(function(btn){
             btn.addEventListener('click', function(){
                 var op = btn.getAttribute('data-zoom');
-                if(op === '+') invZoom = Math.min(2.5, Math.round((invZoom + 0.1) * 10) / 10);
-                else if(op === '-') invZoom = Math.max(0.5, Math.round((invZoom - 0.1) * 10) / 10);
-                else invZoom = 1.0;
-                applyInvZoom();
+                setZoom(op === '+' ? '+' : op === '-' ? '-' : '0');
             });
         });
+
+        // Ctrl/⌘ + 휠 = 재고표만 줌 (브라우저 전체 줌 차단)
+        var wrap = document.getElementById('inventoryFrameWrap');
+        if(wrap){
+            wrap.addEventListener('wheel', function(e){
+                if(!(e.ctrlKey || e.metaKey)) return;
+                e.preventDefault();
+                e.stopPropagation();
+                var delta = e.deltaY;
+                if(delta < 0) setZoom('+');
+                else if(delta > 0) setZoom('-');
+            }, { passive:false, capture:true });
+        }
+
+        // Ctrl/⌘ + +/- /0  : 재고표 화면이 보일 때만 가로채기
+        document.addEventListener('keydown', function(e){
+            if(!(e.ctrlKey || e.metaKey)) return;
+            if(!isInventoryActive()) return;
+            var k = e.key;
+            if(k === '+' || k === '=' || (e.code === 'NumpadAdd')){
+                e.preventDefault(); setZoom('+');
+            } else if(k === '-' || k === '_' || (e.code === 'NumpadSubtract')){
+                e.preventDefault(); setZoom('-');
+            } else if(k === '0' || (e.code === 'Numpad0')){
+                e.preventDefault(); setZoom('0');
+            }
+        }, true);
     }
     if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bindZoom);
     else bindZoom();
