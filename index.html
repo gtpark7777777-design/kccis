@@ -534,6 +534,16 @@ body.home-active .home-view{
     border:1px solid var(--line);font-size:13px;font-weight:500;
     cursor:pointer;
 }
+.vinsearch-btn-paste{
+    padding:11px 18px;background:#1f5f3f;color:#fff;
+    border:1px solid #1f5f3f;font-size:13px;font-weight:600;
+    cursor:pointer;letter-spacing:0.02em;
+    display:inline-flex;align-items:center;gap:4px;
+    transition:background 0.15s;
+}
+.vinsearch-btn-paste:hover{background:#174a30;border-color:#174a30}
+.vinsearch-btn-paste:active{transform:translateY(1px)}
+.vinsearch-btn-paste.pasted{background:#0a2540;border-color:#0a2540}
 .vinsearch-status{
     margin-left:8px;font-size:12.5px;color:var(--text-2);
 }
@@ -2214,13 +2224,14 @@ body.ap-mobile-fs .ap-fs-close:active{background:rgba(0,0,0,0.85)}
             <div class="vh-head">
                 <div class="vh-eyebrow">VEHICLE SEARCH · 차량 검색</div>
                 <div class="vh-title">차대번호로 차량 검색</div>
-                <div class="vh-tagline">재고표에서 차대번호를 복사하여 입력하면 옵션·가격이 자동 정리됩니다 (최대 10대).</div>
+                <div class="vh-tagline">재고표에서 차대번호를 복사한 뒤 <b>📋 붙여넣기</b> 버튼만 누르면 자동 입력됩니다. <span style="color:var(--text-2);font-size:12px">옵션·가격이 자동 정리됩니다 (최대 10대).</span></div>
             </div>
             <div class="vinsearch-form">
                 <textarea id="vinInput" rows="3" placeholder="차대번호 입력 후 Enter (최대 10개, Shift+Enter는 줄바꿈)&#10;예: SALEA7BW8T2519817"></textarea>
                 <div class="vinsearch-actions">
                     <button class="vinsearch-btn" id="vinSearchBtn">확인</button>
                     <button class="vinsearch-btn-secondary" id="vinClearBtn">초기화</button>
+                    <button class="vinsearch-btn-paste" id="vinPasteBtn" type="button" title="클립보드에서 붙여넣기 (⌘+V 와 동일)">📋 붙여넣기</button>
                     <span class="vinsearch-status" id="vinStatus"></span>
                 </div>
             </div>
@@ -5106,11 +5117,47 @@ function showOptionPopup(code, desc, row){
         var btn = document.getElementById('vinSearchBtn');
         var clr = document.getElementById('vinClearBtn');
         var inp = document.getElementById('vinInput');
+        var pasteBtn = document.getElementById('vinPasteBtn');
         if(btn) btn.addEventListener('click', runSearch);
         if(clr) clr.addEventListener('click', function(){
             document.getElementById('vinInput').value = '';
             document.getElementById('vinResults').innerHTML = '';
             document.getElementById('vinStatus').textContent = '';
+        });
+        /* 📋 붙여넣기 버튼 — 클립보드 → textarea */
+        if(pasteBtn) pasteBtn.addEventListener('click', async function(){
+            var inputEl = document.getElementById('vinInput');
+            var statusEl = document.getElementById('vinStatus');
+            if(!inputEl) return;
+            try{
+                var text = '';
+                if(navigator.clipboard && navigator.clipboard.readText){
+                    text = await navigator.clipboard.readText();
+                }
+                if(!text || !text.trim()){
+                    if(statusEl){ statusEl.textContent = '⚠ 클립보드가 비어 있습니다'; statusEl.style.color = '#c00'; }
+                    return;
+                }
+                // 기존 입력 + 새 텍스트를 줄바꿈으로 이어붙이기
+                var existing = (inputEl.value||'').trim();
+                inputEl.value = existing ? (existing + '\n' + text.trim()) : text.trim();
+                inputEl.focus();
+                if(statusEl){ statusEl.textContent = '✓ 붙여넣기 완료'; statusEl.style.color = '#1f5f3f'; }
+                pasteBtn.classList.add('pasted');
+                pasteBtn.textContent = '✓ 완료';
+                setTimeout(function(){
+                    pasteBtn.classList.remove('pasted');
+                    pasteBtn.textContent = '📋 붙여넣기';
+                    if(statusEl) statusEl.textContent = '';
+                }, 1400);
+            }catch(e){
+                if(statusEl){
+                    statusEl.textContent = (e && e.name === 'NotAllowedError')
+                        ? '⚠ 클립보드 권한이 필요합니다 (주소창 자물쇠 → 클립보드 허용)'
+                        : '⚠ 붙여넣기 실패: ' + (e && e.message || e);
+                    statusEl.style.color = '#c00';
+                }
+            }
         });
         /* Enter 키 → 검색 (Shift+Enter는 줄바꿈) */
         if(inp) inp.addEventListener('keydown', function(e){
