@@ -478,34 +478,6 @@ body.home-active .home-view{
     #inventoryFrameWrap{min-height:460px !important}
 }
 
-/* 복사 결과 토스트 (사이트 다른 곳에서 사용 가능) */
-.vqp-toast{
-    position:fixed;
-    left:50%;bottom:80px;transform:translateX(-50%);
-    background:#0a2540;color:#fff;
-    padding:14px 28px;
-    border-radius:28px;
-    font-size:14.5px;font-weight:600;
-    box-shadow:0 12px 32px rgba(0,0,0,0.35);
-    z-index:9999;
-    pointer-events:none;
-    max-width:620px;
-    border:2px solid #d4af6a;
-    animation:vqpToastIn 0.25s ease-out;
-}
-.vqp-toast.vqp-toast-warn{
-    background:#8a4a0a;border-color:#d4af6a;
-}
-.vqp-toast .vqp-toast-vin{
-    font-family:'SF Mono','Monaco','Consolas',monospace;
-    color:#d4af6a;margin-left:8px;font-weight:700;letter-spacing:0.03em;
-    font-size:15px;
-}
-@keyframes vqpToastIn{
-    from{opacity:0;transform:translateX(-50%) translateY(14px) scale(0.96)}
-    to{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}
-}
-
 /* 차량 검색 (VIN search) */
 #vinsearchView{padding:32px 40px;flex:1;display:none;flex-direction:column;overflow:auto}
 .vinsearch-form{
@@ -2216,7 +2188,6 @@ body.ap-mobile-fs .ap-fs-close:active{background:rgba(0,0,0,0.85)}
                     <span class="ap-zoom-label" id="invZoomLabel">100%</span>
                     <button class="ap-btn-zoom" data-zoom-target="inventory" data-zoom="+" title="확대 (Ctrl/⌘ + +)">+</button>
                     <button class="ap-btn-zoom" data-zoom-target="inventory" data-zoom="0" title="원래 크기 (Ctrl/⌘ + 0)">초기화</button>
-                    <button class="ap-btn solid" id="vinQuickCopyBtn" type="button" style="background:#0a2540;border:1px solid #0a2540" title="시트 셀 선택 후 클릭 — Cmd+C 대신">복사하기</button>
                     <a class="ap-btn solid" href="https://docs.google.com/spreadsheets/d/1DDfe6K9WttZkisBP4CqahiQDd1gT1SkTThp4rM8fGc0/edit?gid=0#gid=0" target="_blank" rel="noopener">구글시트에서 열기</a>
                 </div>
             </div>
@@ -2224,8 +2195,6 @@ body.ap-mobile-fs .ap-fs-close:active{background:rgba(0,0,0,0.85)}
                 <iframe class="ap-frame" id="inventoryFrame" src="" title="KCC오토모빌 재고표" style="flex:1;width:100%;border:0;background:#fff"></iframe>
             </div>
 
-            <!-- 복사 토스트 -->
-            <div id="vqpToast" class="vqp-toast" style="display:none">복사됨</div>
         </div>
 
         <!-- 대시보드 view -->
@@ -5338,25 +5307,6 @@ function showOptionPopup(code, desc, row){
     else bindZoom();
 })();
 
-/* === 차대번호 복사 버튼 — 순수 ⌘+C 단축어 트리거 ===
-   동작: document.execCommand('copy') 만 실행. 다른 로직 없음.
-   mousedown preventDefault 로 iframe 포커스를 빼앗지 않음.
-*/
-(function(){
-    function bind(){
-        var btn = document.getElementById('vinQuickCopyBtn');
-        if(!btn) return;
-        btn.addEventListener('mousedown', function(e){
-            e.preventDefault();   // iframe 포커스 유지
-        });
-        btn.addEventListener('click', function(e){
-            e.preventDefault();
-            try{ document.execCommand('copy'); }catch(err){}
-        });
-    }
-    if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bind);
-    else bind();
-})();
 </script>
 
 <div class="wheel-modal-overlay" id="wheelModal" onclick="closeWheelModal()">
