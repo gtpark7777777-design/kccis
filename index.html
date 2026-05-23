@@ -478,110 +478,28 @@ body.home-active .home-view{
     #inventoryFrameWrap{min-height:460px !important}
 }
 
-/* 차대번호 빠른 복사 패널 */
-.vin-quick-panel{
-    position:absolute;
-    top:96px;right:24px;
-    width:520px;max-width:calc(100vw - 60px);
-    max-height:calc(100vh - 220px);
-    background:#fff;
-    border:1px solid var(--line-strong);
-    box-shadow:0 12px 36px rgba(0,0,0,0.18);
-    border-radius:6px;
-    display:flex;flex-direction:column;
-    z-index:50;
-    overflow:hidden;
-}
-.vqp-head{
-    padding:12px 14px;
-    display:flex;align-items:center;justify-content:space-between;
-    background:linear-gradient(135deg,#0a2540 0%,#143258 100%);
-    color:#fff;
-    border-bottom:1px solid var(--line);
-}
-.vqp-title{font-size:13.5px;font-weight:600;letter-spacing:-0.01em}
-.vqp-hint{font-size:11px;font-weight:400;color:#d4af6a;margin-left:6px}
-.vqp-close{
-    background:transparent;border:0;color:#fff;
-    font-size:22px;line-height:1;cursor:pointer;
-    padding:2px 8px;border-radius:3px;
-}
-.vqp-close:hover{background:rgba(255,255,255,0.15)}
-.vqp-search-row{
-    padding:10px 12px;display:flex;gap:8px;
-    border-bottom:1px solid var(--line);background:#fafafa;
-}
-#vqpSearch{
-    flex:1;padding:8px 12px;
-    border:1px solid var(--line);background:#fff;
-    font-size:13px;outline:none;border-radius:3px;
-}
-#vqpSearch:focus{border-color:#0a2540}
-.vqp-refresh{
-    padding:6px 12px;background:#fff;
-    border:1px solid var(--line);font-size:14px;cursor:pointer;border-radius:3px;
-}
-.vqp-refresh:hover{background:var(--bg-soft)}
-.vqp-list-wrap{
-    flex:1;overflow:auto;min-height:0;
-}
-.vqp-table{
-    width:100%;border-collapse:collapse;font-size:12px;
-}
-.vqp-table thead th{
-    position:sticky;top:0;z-index:2;
-    background:#f5f5f0;color:var(--text);
-    padding:8px 10px;text-align:left;
-    border-bottom:2px solid var(--line-strong);
-    font-weight:600;font-size:11px;letter-spacing:0.04em;
-    text-transform:uppercase;
-}
-.vqp-table tbody td{
-    padding:7px 10px;
-    border-bottom:1px solid #f0f0f0;
-    vertical-align:middle;
-}
-.vqp-table tbody tr{cursor:pointer;user-select:none}
-.vqp-table tbody tr:hover td{background:#fffbe6}
-.vqp-table tbody tr.vqp-copied td{background:#d4f0d4 !important;transition:background 0.3s}
-.vqp-c-no{width:80px;font-family:'SF Mono','Monaco','Consolas',monospace;font-size:11px;color:var(--text-2)}
-.vqp-c-model{width:160px;font-size:11.5px}
-.vqp-c-color{width:90px;font-size:11px;color:var(--text-2)}
-.vqp-c-vin{font-family:'SF Mono','Monaco','Consolas',monospace;font-weight:600;color:#0a2540;letter-spacing:0.02em}
-.vqp-loading,.vqp-empty{text-align:center;color:var(--text-2);padding:24px;font-size:12px}
-.vqp-foot{
-    padding:8px 12px;background:#fafafa;
-    border-top:1px solid var(--line);
-    font-size:11px;color:var(--text-2);text-align:right;
-}
+/* 차대번호 복사 토스트 */
 .vqp-toast{
     position:fixed;
     left:50%;bottom:60px;transform:translateX(-50%);
     background:#0a2540;color:#fff;
-    padding:10px 22px;
+    padding:11px 22px;
     border-radius:24px;
     font-size:13px;font-weight:500;
     box-shadow:0 8px 24px rgba(0,0,0,0.3);
     z-index:9999;
     pointer-events:none;
+    max-width:560px;
     animation:vqpToastIn 0.2s ease-out;
 }
+.vqp-toast.vqp-toast-warn{background:#8a4a0a}
 .vqp-toast .vqp-toast-vin{
     font-family:'SF Mono','Monaco','Consolas',monospace;
-    color:#d4af6a;margin-left:6px;font-weight:600;
+    color:#d4af6a;margin-left:6px;font-weight:600;letter-spacing:0.02em;
 }
 @keyframes vqpToastIn{
     from{opacity:0;transform:translateX(-50%) translateY(10px)}
     to{opacity:1;transform:translateX(-50%) translateY(0)}
-}
-@media (max-width:900px){
-    .vin-quick-panel{
-        position:fixed;
-        top:auto;bottom:0;right:0;left:0;
-        width:100%;max-width:100%;
-        max-height:60vh;
-        border-radius:6px 6px 0 0;
-    }
 }
 
 /* 차량 검색 (VIN search) */
@@ -2255,14 +2173,14 @@ body.ap-mobile-fs .ap-fs-close:active{background:rgba(0,0,0,0.85)}
                 <div>
                     <div class="vh-eyebrow">INVENTORY · 재고 현황</div>
                     <div class="vh-title">KCC오토모빌 재고표</div>
-                    <div class="vh-tagline">현재 보유 중인 즉시 출고 가능 차량 재고 현황입니다. <span style="color:var(--text-2);font-size:12px">· 표 위에서 <b>Ctrl/⌘ + 마우스휠</b>로 재고표만 확대·축소 가능</span></div>
+                    <div class="vh-tagline">현재 보유 중인 즉시 출고 가능 차량 재고 현황입니다. <span style="color:var(--text-2);font-size:12px">· <b>Ctrl/⌘ + 휠</b> 확대·축소 · 시트에서 차대번호 더블클릭 → <b>Cmd+C</b> → 우측 <b>📋 차대번호 복사</b> 버튼으로 깔끔하게 정리</span></div>
                 </div>
                 <div class="ap-actions">
                     <button class="ap-btn-zoom" data-zoom-target="inventory" data-zoom="-" title="축소 (Ctrl/⌘ + −)">−</button>
                     <span class="ap-zoom-label" id="invZoomLabel">100%</span>
                     <button class="ap-btn-zoom" data-zoom-target="inventory" data-zoom="+" title="확대 (Ctrl/⌘ + +)">+</button>
                     <button class="ap-btn-zoom" data-zoom-target="inventory" data-zoom="0" title="원래 크기 (Ctrl/⌘ + 0)">초기화</button>
-                    <button class="ap-btn solid" id="vinQuickCopyBtn" type="button" style="background:#1f5f3f;border:1px solid #1f5f3f" title="차대번호 더블클릭으로 빠르게 복사">📋 차대번호 복사</button>
+                    <button class="ap-btn solid" id="vinQuickCopyBtn" type="button" style="background:#1f5f3f;border:1px solid #1f5f3f" title="시트 셀 더블클릭 → Cmd+C 후 이 버튼을 누르면 VIN만 깨끗하게 복사됩니다">📋 차대번호 복사</button>
                     <a class="ap-btn solid" href="https://docs.google.com/spreadsheets/d/1DDfe6K9WttZkisBP4CqahiQDd1gT1SkTThp4rM8fGc0/edit?gid=0#gid=0" target="_blank" rel="noopener">구글시트에서 열기</a>
                 </div>
             </div>
@@ -2270,33 +2188,6 @@ body.ap-mobile-fs .ap-fs-close:active{background:rgba(0,0,0,0.85)}
                 <iframe class="ap-frame" id="inventoryFrame" src="" title="KCC오토모빌 재고표" style="flex:1;width:100%;border:0;background:#fff"></iframe>
             </div>
 
-            <!-- VIN 빠른 복사 패널 (떠 있는 사이드 패널) -->
-            <div id="vinQuickPanel" class="vin-quick-panel" style="display:none">
-                <div class="vqp-head">
-                    <div class="vqp-title">차대번호 빠른 복사 <span class="vqp-hint">— 행 더블클릭 또는 단일 클릭으로 복사</span></div>
-                    <button type="button" class="vqp-close" id="vqpCloseBtn" title="닫기">×</button>
-                </div>
-                <div class="vqp-search-row">
-                    <input type="text" id="vqpSearch" placeholder="🔍 모델·색상·차대번호로 검색…" autocomplete="off">
-                    <button type="button" class="vqp-refresh" id="vqpRefreshBtn" title="시트 새로고침">↻</button>
-                </div>
-                <div class="vqp-list-wrap">
-                    <table class="vqp-table">
-                        <thead>
-                            <tr>
-                                <th class="vqp-c-no">ORDER NO</th>
-                                <th class="vqp-c-model">Model</th>
-                                <th class="vqp-c-color">색상</th>
-                                <th class="vqp-c-vin">차대번호 (VIN)</th>
-                            </tr>
-                        </thead>
-                        <tbody id="vqpTbody">
-                            <tr><td colspan="4" class="vqp-loading">시트 로딩 중…</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="vqp-foot" id="vqpFoot">—</div>
-            </div>
             <!-- 복사 토스트 -->
             <div id="vqpToast" class="vqp-toast" style="display:none">복사됨</div>
         </div>
@@ -5374,215 +5265,86 @@ function showOptionPopup(code, desc, row){
     else bindZoom();
 })();
 
-/* === 차대번호 빠른 복사 패널 === */
+/* === 차대번호 복사 — 클립보드 읽기 방식 ===
+   동작: 시트에서 차대번호 더블클릭 → Cmd+C(자동 선택만으로는 부족, 사용자가 직접 복사) →
+         이 버튼 클릭 시 클립보드를 읽어 VIN 형식인지 검증 후 깔끔하게 정리해서 다시 복사
+   ※ Google Sheets iframe(docs.google.com)은 외부 도메인이라 우리 페이지가 그 안의
+     선택 텍스트를 직접 읽을 수 없습니다. 클립보드 경유가 유일한 방법입니다.
+*/
 (function(){
-    var CSV_URL = 'https://docs.google.com/spreadsheets/d/1DDfe6K9WttZkisBP4CqahiQDd1gT1SkTThp4rM8fGc0/gviz/tq?tqx=out:csv&gid=0';
-    var _rows = null;       // [{no, model, color, vin}, ...]
-    var _loadedAt = 0;
-    var CACHE_MS = 5 * 60 * 1000;
-
-    /* CSV 파싱 (따옴표 처리) */
-    function parseCSV(text){
-        var lines = []; var cur = []; var field = ''; var inQ = false;
-        for(var i=0;i<text.length;i++){
-            var c = text[i];
-            if(inQ){
-                if(c === '"' && text[i+1] === '"'){ field += '"'; i++; }
-                else if(c === '"'){ inQ = false; }
-                else field += c;
-            } else {
-                if(c === '"') inQ = true;
-                else if(c === ','){ cur.push(field); field = ''; }
-                else if(c === '\n'){ cur.push(field); lines.push(cur); cur = []; field = ''; }
-                else if(c === '\r'){}
-                else field += c;
-            }
-        }
-        if(field || cur.length){ cur.push(field); lines.push(cur); }
-        return lines;
-    }
-
-    async function loadRows(force){
-        if(!force && _rows && (Date.now() - _loadedAt) < CACHE_MS) return _rows;
-        var res = await fetch(CSV_URL, {cache:'no-store'});
-        if(!res.ok) throw new Error('시트 로드 실패 ('+res.status+')');
-        var text = await res.text();
-        var rows = parseCSV(text);
-        if(rows.length < 2) throw new Error('데이터가 없습니다');
-        var header = rows[0].map(function(h){return (h||'').trim();});
-        var iNo = header.indexOf('ORDER NO');
-        var iModel = header.indexOf('Model');
-        var iEngine = header.indexOf('Engine');
-        var iExt = header.indexOf('Ext.Color');
-        var iVin = header.indexOf('차대번호');
-        if(iVin < 0) throw new Error('차대번호 컬럼을 찾을 수 없습니다');
-        var out = [];
-        for(var r=1; r<rows.length; r++){
-            var row = rows[r];
-            var vin = (row[iVin]||'').trim();
-            if(!vin) continue;
-            var model = (iModel>=0 ? row[iModel] : '') || '';
-            var engine = (iEngine>=0 ? row[iEngine] : '') || '';
-            var modelFull = (model + (engine ? ' ' + engine : '')).trim();
-            // Model 표시를 짧게 (e.g. "Range Rover (L460) P530 Auto..." → "RR L460 P530")
-            var modelShort = modelFull
-                .replace(/Range Rover Sport/i,'RR Sport')
-                .replace(/Range Rover/i,'RR')
-                .replace(/Defender/i,'Def')
-                .replace(/Discovery/i,'Disco')
-                .replace(/\s+\((L\d+)\)/i,' $1')
-                .replace(/Autobiography/i,'AB')
-                .replace(/Dynamic/i,'Dyn');
-            out.push({
-                no: (iNo>=0 ? row[iNo] : '') || '',
-                model: modelShort,
-                color: (iExt>=0 ? row[iExt] : '') || '',
-                vin: vin
-            });
-        }
-        _rows = out;
-        _loadedAt = Date.now();
-        return _rows;
-    }
-
     function escHtml(s){
         return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
-
-    function renderRows(rows){
-        var tbody = document.getElementById('vqpTbody');
-        var foot = document.getElementById('vqpFoot');
-        if(!tbody) return;
-        if(!rows.length){
-            tbody.innerHTML = '<tr><td colspan="4" class="vqp-empty">검색 결과가 없습니다</td></tr>';
-            if(foot) foot.textContent = '0건';
-            return;
-        }
-        var html = '';
-        for(var i=0; i<rows.length; i++){
-            var r = rows[i];
-            html += '<tr data-vin="'+escHtml(r.vin)+'">'+
-                '<td class="vqp-c-no">'+escHtml(r.no)+'</td>'+
-                '<td class="vqp-c-model">'+escHtml(r.model)+'</td>'+
-                '<td class="vqp-c-color">'+escHtml(r.color)+'</td>'+
-                '<td class="vqp-c-vin">'+escHtml(r.vin)+'</td>'+
-                '</tr>';
-        }
-        tbody.innerHTML = html;
-        if(foot) foot.textContent = rows.length + '건';
-    }
-
-    function filterAndRender(){
-        if(!_rows) return;
-        var q = (document.getElementById('vqpSearch').value||'').trim().toLowerCase();
-        if(!q){ renderRows(_rows); return; }
-        var f = _rows.filter(function(r){
-            return (r.vin||'').toLowerCase().indexOf(q) >= 0
-                || (r.model||'').toLowerCase().indexOf(q) >= 0
-                || (r.color||'').toLowerCase().indexOf(q) >= 0
-                || (r.no||'').toLowerCase().indexOf(q) >= 0;
-        });
-        renderRows(f);
-    }
-
-    function showToast(vin){
+    function showToast(html, kind){
         var t = document.getElementById('vqpToast');
         if(!t) return;
-        t.innerHTML = '✓ 복사됨 <span class="vqp-toast-vin">' + escHtml(vin) + '</span>';
+        t.className = 'vqp-toast' + (kind==='warn' ? ' vqp-toast-warn' : '');
+        t.innerHTML = html;
         t.style.display = 'block';
         clearTimeout(t._timer);
-        t._timer = setTimeout(function(){ t.style.display='none'; }, 1600);
+        t._timer = setTimeout(function(){ t.style.display='none'; }, kind==='warn' ? 3200 : 1800);
     }
-
-    function copyToClipboard(text){
+    function writeClipboard(text){
         if(navigator.clipboard && navigator.clipboard.writeText){
-            return navigator.clipboard.writeText(text).catch(function(){ fallbackCopy(text); });
+            return navigator.clipboard.writeText(text);
         }
-        fallbackCopy(text);
-        return Promise.resolve();
-    }
-    function fallbackCopy(text){
-        var ta = document.createElement('textarea');
-        ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
-        document.body.appendChild(ta); ta.select();
-        try{ document.execCommand('copy'); }catch(e){}
-        document.body.removeChild(ta);
-    }
-
-    function flashRow(tr){
-        tr.classList.add('vqp-copied');
-        setTimeout(function(){ tr.classList.remove('vqp-copied'); }, 600);
-    }
-
-    async function openPanel(){
-        var panel = document.getElementById('vinQuickPanel');
-        if(!panel) return;
-        panel.style.display = 'flex';
-        var tbody = document.getElementById('vqpTbody');
-        if(!_rows){
-            tbody.innerHTML = '<tr><td colspan="4" class="vqp-loading">시트 로딩 중…</td></tr>';
+        return new Promise(function(resolve,reject){
             try{
-                await loadRows(false);
-                filterAndRender();
-            }catch(e){
-                tbody.innerHTML = '<tr><td colspan="4" class="vqp-empty" style="color:#c00">'+escHtml(e.message||'로드 실패')+'</td></tr>';
-            }
-        } else {
-            filterAndRender();
+                var ta = document.createElement('textarea');
+                ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
+                document.body.appendChild(ta); ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+                resolve();
+            }catch(e){ reject(e); }
+        });
+    }
+    /* VIN 추출: 17자 영숫자 (I/O/Q 제외) 패턴 우선, 없으면 알파+숫자 조합 최장 매치 */
+    function extractVin(raw){
+        if(!raw) return null;
+        var s = String(raw).replace(/[\s\t\r\n]+/g,' ').trim();
+        // 표준 VIN: 17자, [A-HJ-NPR-Z0-9]
+        var m = s.match(/\b[A-HJ-NPR-Z0-9]{17}\b/);
+        if(m) return m[0];
+        // 랜드로버 시작 패턴 SAL... 으로 시작하는 영숫자 16~18자
+        m = s.match(/\bSAL[A-Z0-9]{13,17}\b/i);
+        if(m) return m[0].toUpperCase();
+        // 12자 이상 대문자+숫자 조합
+        m = s.match(/\b[A-Z0-9]{12,20}\b/);
+        if(m) return m[0];
+        return null;
+    }
+    async function handleClick(){
+        // navigator.clipboard.readText 권한 필요 (HTTPS + 사용자 제스처)
+        if(!navigator.clipboard || !navigator.clipboard.readText){
+            showToast('⚠ 이 브라우저는 클립보드 읽기를 지원하지 않습니다', 'warn');
+            return;
         }
-        var s = document.getElementById('vqpSearch');
-        if(s) setTimeout(function(){ s.focus(); s.select(); }, 80);
+        try{
+            var raw = await navigator.clipboard.readText();
+            if(!raw || !raw.trim()){
+                showToast('⚠ 클립보드가 비어 있습니다 · 시트 셀 더블클릭 후 <b>⌘+C</b>를 먼저 누르세요', 'warn');
+                return;
+            }
+            var vin = extractVin(raw);
+            if(!vin){
+                showToast('⚠ 클립보드에서 차대번호 형식을 찾지 못했습니다: <span style="font-family:monospace">' + escHtml(raw.substring(0,40)) + '</span>', 'warn');
+                return;
+            }
+            // 깔끔하게 VIN만 다시 클립보드에 기록
+            await writeClipboard(vin);
+            showToast('✓ 차대번호 복사 <span class="vqp-toast-vin">' + escHtml(vin) + '</span>');
+        }catch(e){
+            // 권한 거부 등
+            var msg = e && e.name === 'NotAllowedError'
+                ? '⚠ 클립보드 읽기 권한이 필요합니다 · 주소창의 자물쇠 → 사이트 설정에서 「클립보드: 허용」'
+                : '⚠ 클립보드 읽기 실패: ' + escHtml(String(e && e.message || e));
+            showToast(msg, 'warn');
+        }
     }
-    function closePanel(){
-        var panel = document.getElementById('vinQuickPanel');
-        if(panel) panel.style.display = 'none';
-    }
-
     function bind(){
         var btn = document.getElementById('vinQuickCopyBtn');
-        if(btn) btn.addEventListener('click', openPanel);
-        var closeBtn = document.getElementById('vqpCloseBtn');
-        if(closeBtn) closeBtn.addEventListener('click', closePanel);
-        var refresh = document.getElementById('vqpRefreshBtn');
-        if(refresh) refresh.addEventListener('click', async function(){
-            var tbody = document.getElementById('vqpTbody');
-            tbody.innerHTML = '<tr><td colspan="4" class="vqp-loading">시트 새로고침 중…</td></tr>';
-            try{ await loadRows(true); filterAndRender(); }
-            catch(e){ tbody.innerHTML = '<tr><td colspan="4" class="vqp-empty" style="color:#c00">'+escHtml(e.message||'로드 실패')+'</td></tr>'; }
-        });
-        var search = document.getElementById('vqpSearch');
-        if(search) search.addEventListener('input', filterAndRender);
-
-        // 더블클릭 + 단일클릭 모두 복사 처리
-        var tbody = document.getElementById('vqpTbody');
-        if(tbody){
-            tbody.addEventListener('dblclick', function(e){
-                var tr = e.target.closest('tr[data-vin]');
-                if(!tr) return;
-                var vin = tr.getAttribute('data-vin');
-                copyToClipboard(vin).then(function(){
-                    flashRow(tr);
-                    showToast(vin);
-                });
-            });
-            tbody.addEventListener('click', function(e){
-                var tr = e.target.closest('tr[data-vin]');
-                if(!tr) return;
-                var vin = tr.getAttribute('data-vin');
-                copyToClipboard(vin).then(function(){
-                    flashRow(tr);
-                    showToast(vin);
-                });
-            });
-        }
-
-        // ESC = 닫기
-        document.addEventListener('keydown', function(e){
-            if(e.key === 'Escape'){
-                var panel = document.getElementById('vinQuickPanel');
-                if(panel && panel.style.display !== 'none') closePanel();
-            }
-        });
+        if(btn) btn.addEventListener('click', handleClick);
     }
     if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bind);
     else bind();
