@@ -469,6 +469,15 @@ body.home-active .home-view{
 }
 #inventoryFrameWrap{overflow:auto !important}
 
+/* 재고표 — 화면 세로 길이에 맞게 확장 */
+#inventoryView{min-height:calc(100vh - 220px)}
+#inventoryFrameWrap{min-height:calc(100vh - 300px) !important}
+#inventoryFrame{min-height:0 !important;height:100% !important}
+@media (max-height:760px){
+    #inventoryView{min-height:540px}
+    #inventoryFrameWrap{min-height:460px !important}
+}
+
 /* 차량 검색 (VIN search) */
 #vinsearchView{padding:32px 40px;flex:1;display:none;flex-direction:column;overflow:auto}
 .vinsearch-form{
@@ -2151,7 +2160,7 @@ body.ap-mobile-fs .ap-fs-close:active{background:rgba(0,0,0,0.85)}
                 </div>
             </div>
             <div class="ap-frame-wrap" id="inventoryFrameWrap">
-                <iframe class="ap-frame" id="inventoryFrame" src="" title="KCC오토모빌 재고표" style="flex:1;width:100%;border:0;min-height:680px;background:#fff"></iframe>
+                <iframe class="ap-frame" id="inventoryFrame" src="" title="KCC오토모빌 재고표" style="flex:1;width:100%;border:0;background:#fff"></iframe>
             </div>
         </div>
 
