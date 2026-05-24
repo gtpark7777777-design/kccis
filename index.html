@@ -580,6 +580,7 @@ body.home-active .home-view{
     border-radius:3px;
     white-space:nowrap;
 }
+.vs-badge-pending{background:#f3e8ff;color:#6b21a8;border:1px solid #d8b4fe}
 .vs-badge-stock{background:#e8f5e9;color:#2e7d32}
 .vs-badge-display{background:#fff8e1;color:#f57f17}
 .vs-badge-contract{background:#e3f2fd;color:#1565c0}
@@ -4843,7 +4844,7 @@ function showOptionPopup(code, desc, row){
             return _sheetCache;
         }
         /* 정규 컬럼 순서 — 모든 탭의 row를 이 순서로 변환 */
-        var CANONICAL = ['ORDER NO','Model','Engine','MY','Ext.Color','Ext.Code','Int.Color','Int.Code','차대번호','옵션','항구 도착 예정일','기본MSRP','추가옵션','입고일','전시지점','계약서번호','계약일','배정일','출고일','등록완료일','지점','출고지','담당','고객','Remark','MSRP','대시캠'];
+        var CANONICAL = ['ORDER NO','Model','Engine','MY','Ext.Color','Ext.Code','Int.Color','Int.Code','차대번호','옵션','항구 도착 예정일','매입','기본MSRP','추가옵션','입고일','전시지점','계약서번호','계약일','배정일','출고일','등록완료일','지점','출고지','담당','고객','Remark','MSRP','대시캠'];
         var canonicalIdx = {};
         CANONICAL.forEach(function(n,i){ canonicalIdx[n] = i; });
         
@@ -4967,7 +4968,17 @@ function showOptionPopup(code, desc, row){
         if(displayBranch){
             return {label:'🚙 전시', detail: '전시지점: '+displayBranch, badgeClass: 'vs-badge-display'};
         }
-        // 즉시 출고 가능
+        // 입항대기 — 한국 미입항(입고일 비어있음): 통관 전이라 즉시출고 불가
+        var inboundDate = get('입고일');
+        var purchaseType = get('매입');
+        var portArrival = get('항구 도착 예정일');
+        if(!inboundDate && (purchaseType === '배정' || portArrival)){
+            var pendingDetail = [];
+            if(purchaseType === '배정') pendingDetail.push('배정 상태');
+            if(portArrival) pendingDetail.push('항구도착 예정: '+portArrival+' (통관 +10일)');
+            return {label:'🚢 입항대기', detail: pendingDetail.join(' · '), badgeClass: 'vs-badge-pending'};
+        }
+        // 즉시 출고 가능 (입고일 있음 = 통관 완료 = 출고 가능)
         return {label:'⚡ 즉시출고', detail: '', badgeClass: 'vs-badge-stock'};
     }
     
@@ -4979,14 +4990,29 @@ function showOptionPopup(code, desc, row){
         return n.toLocaleString('ko-KR');
     }
     
-    /* 출고 가능시기 - 항구 도착 예정일을 N월 형식으로 */
-    function fmtDelivery(s){
+    /* 출고 가능시기 — 항구 도착 예정일을 N월 형식으로. offsetDays 만큼 가산 (통관기간 등). */
+    function fmtDelivery(s, offsetDays){
         if(!s) return '—';
+        var off = offsetDays || 0;
         var m = String(s).match(/(\d{2,4})[-./](\d{1,2})[-./](\d{1,2})/);
-        if(m) return m[2] + '월';
+        if(m){
+            var y = parseInt(m[1],10); if(y < 100) y += 2000;
+            var mo = parseInt(m[2],10);
+            var d = parseInt(m[3],10);
+            var dt = new Date(y, mo-1, d);
+            if(off) dt.setDate(dt.getDate() + off);
+            return (dt.getMonth() + 1) + '월';
+        }
         m = String(s).match(/(\d{1,2})월/);
         if(m) return m[0];
         return s;
+    }
+    /* 행 컨텍스트로 실제 출고 가능시기 계산 — 입고일 비어있으면 통관 +10일, 있으면 그대로 */
+    function calcDeliveryMonth(row, idx){
+        var inboundD = idx['입고일'] >= 0 ? (row[idx['입고일']]||'').trim() : '';
+        var portD = (row[idx['항구 도착 예정일']]||'').trim();
+        if(!portD) return inboundD ? fmtDelivery(inboundD) : '—';
+        return inboundD ? fmtDelivery(portD) : fmtDelivery(portD, 10);
     }
     
     /* VIN 검색 실행 */
@@ -5086,7 +5112,7 @@ function showOptionPopup(code, desc, row){
                     html += '<td>' + (r[idx['Engine']]||'') + '</td>';
                     html += '<td>' + (r[idx['Ext.Color']]||'') + '</td>';
                     html += '<td>' + (r[idx['Int.Color']]||'') + '</td>';
-                    html += '<td>' + fmtDelivery(r[idx['항구 도착 예정일']]) + '</td>';
+                    html += '<td>' + calcDeliveryMonth(r, idx) + '</td>';
                     
                     // 차량 상태 (계약/이슈/보관/전시/출고/즉시출고)
                     var status = determineStatus(r, idx);
@@ -5131,7 +5157,7 @@ function showOptionPopup(code, desc, row){
                         vin: r[idx['차대번호']]||'',
                         extColor: r[idx['Ext.Color']]||'',
                         intColor: r[idx['Int.Color']]||'',
-                        delivery: fmtDelivery(r[idx['항구 도착 예정일']]),
+                        delivery: calcDeliveryMonth(r, idx),
                         statusLabel: status.label,
                         statusDetail: status.detail,
                         opts: paidOpts,
