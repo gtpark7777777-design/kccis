@@ -4734,7 +4734,17 @@ function showOptionPopup(code, desc, row){
 
 /* === VIN 검색 기능 === */
 (function(){
-    var SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1DDfe6K9WttZkisBP4CqahiQDd1gT1SkTThp4rM8fGc0/gviz/tq?tqx=out:csv&gid=0';
+    var SHEET_ID = '1DDfe6K9WttZkisBP4CqahiQDd1gT1SkTThp4rM8fGc0';
+    var SHEET_TABS = [
+        { gid: 0,          name: '전체재고' },
+        { gid: 614839029,  name: '입항예정(익월)' },
+        { gid: 158025219,  name: '생산완료' },
+        { gid: 879689681,  name: '전시차' },
+        { gid: 763419697,  name: '대기재고' }
+    ];
+    function _csvUrl(gid){
+        return 'https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/gviz/tq?tqx=out:csv&gid=' + gid;
+    }
     var _sheetCache = null;
     var _sheetCacheTime = 0;
     
@@ -4827,36 +4837,82 @@ function showOptionPopup(code, desc, row){
         return lines;
     }
     
-    /* 시트 데이터 fetch (5분 캐시) */
+    /* 시트 데이터 fetch — 재고표 전체 탭(전체재고/입항예정/생산완료/전시차/대기재고)을 병렬로 가져와 통합. VIN 기준 중복 제거. 5분 캐시. */
     async function fetchSheet(){
         if(_sheetCache && (Date.now() - _sheetCacheTime) < 5*60*1000){
             return _sheetCache;
         }
-        var res = await fetch(SHEET_CSV_URL);
-        if(!res.ok) throw new Error('시트 로드 실패: '+res.status);
-        var text = await res.text();
-        var rows = parseCSV(text);
-        if(rows.length < 2) throw new Error('데이터 없음');
-        var header = rows[0];
-        var idx = {};
-        ['ORDER NO','Model','Engine','MY','Ext.Color','Ext.Code','Int.Color','Int.Code','차대번호','옵션','항구 도착 예정일','기본MSRP','추가옵션','입고일','전시지점','계약서번호','계약일','배정일','출고일','등록완료일','지점','출고지','담당','고객','Remark'].forEach(function(name){
-            idx[name] = header.indexOf(name);
-        });
-        // ★MSRP★ 컬럼 (멀티라인 헤더, ★ 마크 우선)
-        idx['MSRP'] = header.findIndex(function(h){ return h && h.indexOf('★MSRP★') !== -1; });
-        // 대시캠+사고차 별도 금액 컬럼 (★MSRP★ 직전, 보통 column 16)
-        idx['대시캠'] = -1;
-        for(var ii=0; ii<header.length; ii++){
-            if(header[ii] && header[ii].indexOf('★') === -1 && header[ii].indexOf('옵션+대시캠+사고차') !== -1){
-                idx['대시캠'] = ii;
-                break;
+        /* 정규 컬럼 순서 — 모든 탭의 row를 이 순서로 변환 */
+        var CANONICAL = ['ORDER NO','Model','Engine','MY','Ext.Color','Ext.Code','Int.Color','Int.Code','차대번호','옵션','항구 도착 예정일','기본MSRP','추가옵션','입고일','전시지점','계약서번호','계약일','배정일','출고일','등록완료일','지점','출고지','담당','고객','Remark','MSRP','대시캠'];
+        var canonicalIdx = {};
+        CANONICAL.forEach(function(n,i){ canonicalIdx[n] = i; });
+        
+        /* 모든 탭을 병렬 fetch */
+        var responses = await Promise.all(SHEET_TABS.map(function(t){
+            return fetch(_csvUrl(t.gid))
+                .then(function(r){ return r.ok ? r.text().then(function(x){ return {tab:t, text:x}; }) : null; })
+                .catch(function(){ return null; });
+        }));
+        
+        var allRows = [];
+        var seenVins = {};
+        var tabStats = [];
+        
+        for(var ri=0; ri<responses.length; ri++){
+            var resp = responses[ri];
+            if(!resp){ tabStats.push({name:SHEET_TABS[ri].name, count:0, err:'fetch failed'}); continue; }
+            var rows = parseCSV(resp.text);
+            if(rows.length < 2){ tabStats.push({name:resp.tab.name, count:0, err:'no data'}); continue; }
+            
+            /* 헤더 행 찾기 — '차대번호'가 포함된 첫 행 (최대 5행까지 탐색, 생산완료처럼 안내문이 1행에 있는 경우 대응) */
+            var headerRow = -1;
+            for(var hi=0; hi<Math.min(5, rows.length); hi++){
+                if(rows[hi].indexOf('차대번호') !== -1){ headerRow = hi; break; }
             }
+            if(headerRow === -1){ tabStats.push({name:resp.tab.name, count:0, err:'no 차대번호 col'}); continue; }
+            
+            var sheetHeader = rows[headerRow];
+            var sheetIdx = {};
+            CANONICAL.forEach(function(n){ sheetIdx[n] = sheetHeader.indexOf(n); });
+            sheetIdx['MSRP'] = sheetHeader.findIndex(function(h){ return h && h.indexOf('★MSRP★') !== -1; });
+            sheetIdx['대시캠'] = -1;
+            for(var ii=0; ii<sheetHeader.length; ii++){
+                if(sheetHeader[ii] && sheetHeader[ii].indexOf('★') === -1 && sheetHeader[ii].indexOf('옵션+대시캠+사고차') !== -1){
+                    sheetIdx['대시캠'] = ii;
+                    break;
+                }
+            }
+            if(sheetIdx['MSRP'] === -1 && sheetIdx['대시캠'] !== -1){
+                sheetIdx['MSRP'] = sheetIdx['대시캠'];
+            }
+            
+            var vinPos = sheetIdx['차대번호'];
+            if(vinPos < 0){ tabStats.push({name:resp.tab.name, count:0, err:'no VIN'}); continue; }
+            
+            /* 각 row를 정규 컬럼 순서로 변환 */
+            var tabAdded = 0;
+            for(var di=headerRow+1; di<rows.length; di++){
+                var raw = rows[di];
+                var vin = (raw[vinPos] || '').trim();
+                if(!vin) continue;
+                if(seenVins[vin]) continue; /* VIN 중복 제거 (앞 탭이 우선) */
+                seenVins[vin] = true;
+                var normalized = new Array(CANONICAL.length);
+                for(var ci=0; ci<CANONICAL.length; ci++){
+                    var src = sheetIdx[CANONICAL[ci]];
+                    normalized[ci] = src >= 0 ? (raw[src] || '') : '';
+                }
+                allRows.push(normalized);
+                tabAdded++;
+            }
+            tabStats.push({name:resp.tab.name, count:tabAdded});
         }
-        if(idx['MSRP'] === -1 && idx['대시캠'] !== -1){
-            idx['MSRP'] = idx['대시캠']; /* fallback */
-        }
-        var data = rows.slice(1).filter(function(r){ return r[idx['차대번호']]; });
-        _sheetCache = { idx: idx, rows: data };
+        
+        if(allRows.length === 0) throw new Error('전체 탭에서 데이터를 가져올 수 없습니다');
+        
+        console.log('[VIN검색] 탭별 수집:', tabStats.map(function(t){return t.name+'('+t.count+'대)'+(t.err?'['+t.err+']':'');}).join(' / '), '→ 합계 '+allRows.length+'대 (중복 제거 후)');
+        
+        _sheetCache = { idx: canonicalIdx, rows: allRows, tabStats: tabStats };
         _sheetCacheTime = Date.now();
         return _sheetCache;
     }
@@ -5100,7 +5156,8 @@ function showOptionPopup(code, desc, row){
             }
             
             resultEl.innerHTML = html;
-            status.textContent = '✓ ' + matched.length + '대 매칭, ' + notFound.length + '대 미발견';
+            var tabSummary = sheet.tabStats ? ' · 검색 범위: ' + sheet.tabStats.filter(function(t){return t.count>0;}).map(function(t){return t.name;}).join(', ') : '';
+            status.textContent = '✓ ' + matched.length + '대 매칭, ' + notFound.length + '대 미발견' + tabSummary;
         } catch(e) {
             status.textContent = '오류: ' + e.message;
             console.error(e);
