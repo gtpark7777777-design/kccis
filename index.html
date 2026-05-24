@@ -4975,7 +4975,7 @@ function showOptionPopup(code, desc, row){
         if(!inboundDate && (purchaseType === '배정' || portArrival)){
             var pendingDetail = [];
             if(purchaseType === '배정') pendingDetail.push('배정 상태');
-            if(portArrival) pendingDetail.push('항구도착 예정: '+portArrival+' (통관 +10일)');
+            if(portArrival) pendingDetail.push('항구도착 예정: '+portArrival);
             return {label:'🚢 입항대기', detail: pendingDetail.join(' · '), badgeClass: 'vs-badge-pending'};
         }
         // 즉시 출고 가능 (입고일 있음 = 통관 완료 = 출고 가능)
